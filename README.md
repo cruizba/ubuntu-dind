@@ -14,7 +14,7 @@ Sometimes we need to run docker containers inside other docker containers, with 
 There are two ways to run DinD:
 
 ### 1. DinD with shared socket:
-One of the solutions consists on sharing the socket from the host system in `/var/run/docker.sock` with `-v /var/run/docker.sock:/var/run/docker.sock`. Doing that, we're not really using "docker inside docker", we're creating containers from the container, but they're still be running by the host machine. 
+One of the solutions consists on sharing the socket from the host system in `/var/run/docker.sock` with `-v /var/run/docker.sock:/var/run/docker.sock`. Doing that, we're not really using "docker inside docker", we're creating containers from the container, but they're still being running by the host machine. 
 This solution results in the following problems:
 
 - Networking problems: If we run a container inside another container, as the containers are running by the host, if we expose, for example, the port 3306, this port will be visible from the host, but not inside the container that launched the second container.
