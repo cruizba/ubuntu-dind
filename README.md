@@ -5,7 +5,7 @@
 I've created this project as a combination of this two repositories:
 - The original idea comes from this project and it's a lighter solution: [DinD](https://github.com/alekslitvinenk/dind) by [alekslitvinenk](https://github.com/alekslitvinenk):
 The only difference of this project from the one created by @alekslitvinenk, is that my image is a modification with ubuntu as the base OS of the container.
-- [Docker image](https://github.com/docker-library/docker) (literally a docker image of docker)
+- [Docker](https://github.com/docker-library/docker) (literally a docker image of docker)
 
 ## What is DinD and common problems.
 
@@ -24,7 +24,7 @@ This solution results in the following problems:
 
 This is a more isolated way. You can have a clean environment with docker every time you want, and the network and volumes problems dissapears. You now can share folders from container-1 to the container-2 created by the container-1. And you can expose ports from container-2 and have access to this ports from container1.
 
-## 3. Why another DinD?
+## Why another DinD?
 
 I've created this repo for two reasons:
 
