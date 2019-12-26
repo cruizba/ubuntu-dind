@@ -2,16 +2,15 @@ FROM ubuntu:18.04
 
 RUN apt update \
     && apt install -y ca-certificates openssh-client \
-    wget iptables \
+    wget curl iptables supervisor \
     && rm -rf /var/lib/apt/list/*
 
-ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 19.03.5
-ENV DEBUG false
-# TODO ENV DOCKER_SHA256
-# https://github.com/docker/docker-ce/blob/5b073ee2cf564edee5adca05eee574142f7627bb/components/packaging/static/hash_files !!
-# (no SHA file artifacts on download.docker.com yet as of 2017-06-07 though)
+ENV DOCKER_CHANNEL=stable \
+	DOCKER_VERSION=19.03.5 \
+	DOCKER_COMPOSE_VERSION=1.25.0 \
+	DEBUG=false
 
+# Docker installation
 RUN set -eux; \
 	\
 	arch="$(uname --m)"; \
@@ -42,21 +41,16 @@ RUN set -eux; \
 	dockerd --version; \
 	docker --version
 
-COPY modprobe.sh /usr/local/bin/modprobe
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY modprobe startup.sh /usr/local/bin/
+COPY supervisor/ /etc/supervisor/conf.d/
+COPY logger.sh /opt/bash-utils/logger.sh
 
-# https://github.com/docker-library/docker/pull/166
-#   dockerd-entrypoint.sh uses DOCKER_TLS_CERTDIR for auto-generating TLS certificates
-#   docker-entrypoint.sh uses DOCKER_TLS_CERTDIR for auto-setting DOCKER_TLS_VERIFY and DOCKER_CERT_PATH
-# (For this to work, at least the "client" subdirectory of this path needs to be shared between the client and server containers via a volume, "docker cp", or other means of data sharing.)
-ENV DOCKER_TLS_CERTDIR=/certs
-# also, ensure the directory pre-exists and has wide enough permissions for "dockerd-entrypoint.sh" to create subdirectories, even when run in "rootless" mode
-RUN mkdir /certs /certs/client && chmod 1777 /certs /certs/client
-
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh /usr/local/bin/modprobe
-# (doing both /certs and /certs/client so that if Docker does a "copy-up" into a volume defined on /certs/client, it will "do the right thing" by default in a way that still works for rootless users)
-
+RUN chmod +x /usr/local/bin/startup.sh /usr/local/bin/modprobe
 VOLUME /var/lib/docker
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Docker compose installation
+RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
+	&& chmod +x /usr/local/bin/docker-compose
+
+ENTRYPOINT ["startup.sh"]
 CMD ["sh"]
