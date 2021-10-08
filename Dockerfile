@@ -6,8 +6,8 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=19.03.11 \
-	DOCKER_COMPOSE_VERSION=1.26.0 \
+	DOCKER_VERSION=20.10.9 \
+	DOCKER_COMPOSE_VERSION=1.29.2 \
 	DEBUG=false
 
 # Docker installation
@@ -50,7 +50,7 @@ VOLUME /var/lib/docker
 
 # Docker compose installation
 RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
-	&& chmod +x /usr/local/bin/docker-compose
+	&& chmod +x /usr/local/bin/docker-compose && docker-compose version
 
 ENTRYPOINT ["startup.sh"]
 CMD ["sh"]
