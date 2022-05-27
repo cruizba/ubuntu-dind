@@ -43,5 +43,7 @@ This will run a bash with a complete docker separated from your host to build, r
 
 The option `--privileged` is not secure. I did this image just for little experiments, don't use for production. Just for dev or testing purposes.
 
+To do this in the GOOD AND SECURE WAY just use: https://github.com/nestybox/sysbox
+
 
 
