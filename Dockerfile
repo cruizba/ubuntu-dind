@@ -6,7 +6,7 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=20.10.19 \
+	DOCKER_VERSION=20.10.20 \
 	DOCKER_COMPOSE_VERSION=1.29.2 \
 	DEBUG=false
 
