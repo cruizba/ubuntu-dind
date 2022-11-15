@@ -34,4 +34,4 @@ for process in "${processes[@]}"; do
 done
 
 # Wait processes to be running
-/bin/bash
+"$@"
