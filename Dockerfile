@@ -7,13 +7,13 @@ RUN apt update \
 
 ENV DOCKER_CHANNEL=stable \
 	DOCKER_VERSION=20.10.22 \
-	DOCKER_COMPOSE_VERSION=1.29.2 \
+	DOCKER_COMPOSE_VERSION=v2.15.1 \
 	DEBUG=false
 
 # Docker installation
 RUN set -eux; \
 	\
-	arch="$(uname --m)"; \
+	arch="$(uname -m)"; \
 	case "$arch" in \
         # amd64
 		x86_64) dockerArch='x86_64' ;; \
