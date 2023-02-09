@@ -24,4 +24,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: cruizba/ubuntu-dind:${{ github.ref_name }},cruizba/ubuntu-dind:latest
