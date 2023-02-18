@@ -6,8 +6,8 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=20.10.22 \
-	DOCKER_COMPOSE_VERSION=v2.15.1 \
+	DOCKER_VERSION=20.10.23 \
+	DOCKER_COMPOSE_VERSION=v2.16.0 \
 	DEBUG=false
 
 # Docker installation
@@ -51,6 +51,11 @@ VOLUME /var/lib/docker
 # Docker compose installation
 RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
 	&& chmod +x /usr/local/bin/docker-compose && docker-compose version
+	
+# Create a symlink to the docker binary in /usr/local/lib/docker/cli-plugins
+# for users which uses 'docker compose' instead of 'docker-compose'
+RUN mkdir -p /usr/local/lib/docker/cli-plugins \
+	&& ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
 
 ENTRYPOINT ["startup.sh"]
 CMD ["bash"]
