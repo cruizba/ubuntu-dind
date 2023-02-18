@@ -3,14 +3,7 @@ FROM ubuntu:20.04
 RUN apt update \
     && apt install -y ca-certificates openssh-client \
     wget curl iptables supervisor \
-    && rm -rf /var/lib/apt/list/* && \
-	if [ $(uname -m) = "armv7" ] || [ $(uname -m) = "armv7l" ]; then \
-		# For some reason, certificates are incorrectly installed on armv7l
-		# So it is necessary to post process the certificates
-		# with this command to make it work
-		# https://stackoverflow.com/a/70771488
-		for i in /etc/ssl/certs/*.pem; do HASH=$(openssl x509 -hash -noout -in $i); ln -s $(basename $i) /etc/ssl/certs/$HASH.0; done; \
-	fi
+    && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
 	DOCKER_VERSION=20.10.23 \
@@ -27,7 +20,7 @@ RUN set -eux; \
         # arm32v6
 		armhf) dockerArch='armel' ;; \
         # arm32v7
-		armv7|armv7l) dockerArch='armhf' ;; \
+		armv7) dockerArch='armhf' ;; \
         # arm64v8
 		aarch64) dockerArch='aarch64' ;; \
 		*) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;;\
