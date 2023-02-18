@@ -20,9 +20,23 @@ jobs:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push amd64
         uses: docker/build-push-action@v4
         with:
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64
+          tags: cruizba/ubuntu-dind:${{ github.ref_name }},cruizba/ubuntu-dind:latest
+      
+      - name: Build and push armv7
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          platforms: linux/arm/v7
+          tags: cruizba/ubuntu-dind:${{ github.ref_name }},cruizba/ubuntu-dind:latest
+      
+      - name: Build and push arm64
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          platforms: linux/arm64
           tags: cruizba/ubuntu-dind:${{ github.ref_name }},cruizba/ubuntu-dind:latest
