@@ -1,5 +1,12 @@
 # Ubuntu DinD(Docker in Docker) Image
 
+## :warning::warning: WARNING :warning::warning:
+
+The option `--privileged` is not secure. I did this image just for little experiments, don't use for production. Just for dev or testing purposes.
+
+To do this in the GOOD AND SECURE WAY just use: https://github.com/nestybox/sysbox
+
+
 ## Credits
 
 I've created this project as a combination of this two repositories:
@@ -38,12 +45,5 @@ docker run -it --privileged cruizba/ubuntu-dind
 ```
 
 This will run a bash with a complete docker separated from your host to build, run and push docker images.
-
-## :warning::warning: WARNING :warning::warning:
-
-The option `--privileged` is not secure. I did this image just for little experiments, don't use for production. Just for dev or testing purposes.
-
-To do this in the GOOD AND SECURE WAY just use: https://github.com/nestybox/sysbox
-
 
 
