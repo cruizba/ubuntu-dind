@@ -20,7 +20,7 @@ RUN set -eux; \
         # arm32v6
 		armhf) dockerArch='armel' ;; \
         # arm32v7
-		armv7) dockerArch='armhf' ;; \
+		armv7|armv7l) dockerArch='armhf' ;; \
         # arm64v8
 		aarch64) dockerArch='aarch64' ;; \
 		*) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;;\
