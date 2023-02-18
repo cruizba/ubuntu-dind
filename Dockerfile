@@ -6,23 +6,26 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=20.10.23 \
+	DOCKER_VERSION=23.0.0 \
 	DOCKER_COMPOSE_VERSION=v2.16.0 \
+	BUILDX_VERSION=v0.10.3 \
 	DEBUG=false
 
-# Docker installation
+ARG BUILDX_VERSION=0.10.3
+
+# Docker and buildx installation
 RUN set -eux; \
 	\
 	arch="$(uname -m)"; \
 	case "$arch" in \
         # amd64
-		x86_64) dockerArch='x86_64' ;; \
+		x86_64) dockerArch='x86_64' ; buildx_arch='linux-amd64' ;; \
         # arm32v6
-		armhf) dockerArch='armel' ;; \
+		armhf) dockerArch='armel' ; buildx_arch='linux-arm-v6' ;; \
         # arm32v7
-		armv7) dockerArch='armhf' ;; \
+		armv7) dockerArch='armhf' ; buildx_arch='linux-arm-v7' ;; \
         # arm64v8
-		aarch64) dockerArch='aarch64' ;; \
+		aarch64) dockerArch='aarch64' ; buildx_arch='linux-arm64' ;; \
 		*) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;;\
 	esac; \
 	\
@@ -37,9 +40,17 @@ RUN set -eux; \
 		--directory /usr/local/bin/ \
 	; \
 	rm docker.tgz; \
+	if ! wget -O docker-buildx "https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.${buildx_arch}"; then \
+		echo >&2 "error: failed to download 'buildx-${BUILDX_VERSION}.${buildx_arch}'"; \
+		exit 1; \
+	fi; \
+	mkdir -p /usr/local/lib/docker/cli-plugins; \
+	chmod +x docker-buildx; \
+	mv docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx; \
 	\
 	dockerd --version; \
-	docker --version
+	docker --version; \
+	docker buildx version
 
 COPY modprobe startup.sh /usr/local/bin/
 COPY supervisor/ /etc/supervisor/conf.d/
@@ -54,8 +65,7 @@ RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOS
 	
 # Create a symlink to the docker binary in /usr/local/lib/docker/cli-plugins
 # for users which uses 'docker compose' instead of 'docker-compose'
-RUN mkdir -p /usr/local/lib/docker/cli-plugins \
-	&& ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+RUN ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
 
 ENTRYPOINT ["startup.sh"]
 CMD ["bash"]
