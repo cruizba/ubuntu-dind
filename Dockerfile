@@ -11,8 +11,6 @@ ENV DOCKER_CHANNEL=stable \
 	BUILDX_VERSION=v0.10.3 \
 	DEBUG=false
 
-ARG BUILDX_VERSION=0.10.3
-
 # Docker and buildx installation
 RUN set -eux; \
 	\
