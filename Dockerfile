@@ -3,7 +3,14 @@ FROM ubuntu:20.04
 RUN apt update \
     && apt install -y ca-certificates openssh-client \
     wget curl iptables supervisor \
-    && rm -rf /var/lib/apt/list/*
+    && rm -rf /var/lib/apt/list/* && \
+	if [ $(uname -m) = "armv7" ] || [ $(uname -m) = "armv7l" ]; then \
+		# For some reason, certificates are incorrectly installed on armv7l
+		# So it is necessary to post process the certificates
+		# with this command to make it work
+		# https://stackoverflow.com/a/70771488
+		for i in /etc/ssl/certs/*.pem; do HASH=$(openssl x509 -hash -noout -in $i); ln -s $(basename $i) /etc/ssl/certs/$HASH.0; done; \
+	fi
 
 ENV DOCKER_CHANNEL=stable \
 	DOCKER_VERSION=20.10.23 \
