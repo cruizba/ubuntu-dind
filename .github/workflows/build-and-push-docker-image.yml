@@ -20,9 +20,18 @@ jobs:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Ubuntu 20.04 - Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
+          file: ubuntu-focal.Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: cruizba/ubuntu-dind:${{ github.ref_name }},cruizba/ubuntu-dind:latest
+          tags: cruizba/ubuntu-dind:focal-${{ github.ref_name }}
+
+      - name: Ubuntu 22.04 - Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          file: ubuntu-jammy.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: cruizba/ubuntu-dind:jammy-${{ github.ref_name }},cruizba/ubuntu-dind:latest
