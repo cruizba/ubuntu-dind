@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 RUN apt update \
-    && apt install -y ca-certificates openssh-client \
+    && apt install -y ca-certificates \
     wget curl iptables supervisor \
     && rm -rf /var/lib/apt/list/*
 
@@ -50,20 +50,23 @@ RUN set -eux; \
 	docker --version; \
 	docker buildx version
 
-COPY modprobe startup.sh /usr/local/bin/
+COPY modprobe start-docker.sh entrypoint.sh /usr/local/bin/
 COPY supervisor/ /etc/supervisor/conf.d/
 COPY logger.sh /opt/bash-utils/logger.sh
 
-RUN chmod +x /usr/local/bin/startup.sh /usr/local/bin/modprobe
+RUN chmod +x /usr/local/bin/start-docker.sh \
+	/usr/local/bin/entrypoint.sh \
+	/usr/local/bin/modprobe
+
 VOLUME /var/lib/docker
 
 # Docker compose installation
 RUN curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
 	&& chmod +x /usr/local/bin/docker-compose && docker-compose version
-	
+
 # Create a symlink to the docker binary in /usr/local/lib/docker/cli-plugins
 # for users which uses 'docker compose' instead of 'docker-compose'
 RUN ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
 
-ENTRYPOINT ["startup.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["bash"]

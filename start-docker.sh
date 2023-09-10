@@ -20,18 +20,11 @@ function wait_for_process () {
 INFO "Starting supervisor"
 /usr/bin/supervisord -n >> /dev/null 2>&1 &
 
-INFO "Waiting for processes to be running"
-processes=(dockerd)
-
-for process in "${processes[@]}"; do
-    wait_for_process "$process"
-    if [ $? -ne 0 ]; then
-        ERROR "$process is not running after max time"
-        exit 1
-    else 
-        INFO "$process is running"
-    fi
-done
-
-# Wait processes to be running
-"$@"
+INFO "Waiting for docker to be running"
+wait_for_process dockerd
+if [ $? -ne 0 ]; then
+    ERROR "dockerd is not running after max time"
+    exit 1
+else
+    INFO "dockerd is running"
+fi
