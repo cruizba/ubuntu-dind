@@ -6,9 +6,9 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=24.0.3 \
+	DOCKER_VERSION=24.0.4 \
 	DOCKER_COMPOSE_VERSION=v2.19.1 \
-	BUILDX_VERSION=v0.11.0 \
+	BUILDX_VERSION=v0.11.1 \
 	DEBUG=false
 
 # Docker and buildx installation
