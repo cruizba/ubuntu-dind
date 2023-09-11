@@ -1,5 +1,21 @@
 # Ubuntu Docker-in-Docker (DinD) Image
 
+# Table of Contents
+1. [Ubuntu Docker-in-Docker (DinD) Image](#ubuntu-docker-in-docker-dind-image)
+2. [Credits](#credits)
+3. [Understanding DinD and Its Challenges](#understanding-dind-and-its-challenges)
+   - [Docker-out-of-Docker (DooD) Using Socket Sharing: Challenges](#docker-out-of-docker-dood-using-socket-sharing-challenges)
+   - [DinD with Docker Daemon Running in the Container: Solution](#dind-with-docker-daemon-running-in-the-container-solution)
+4. [Comparison: This DinD Project vs Existing Ones](#comparison-this-dind-project-vs-existing-ones)
+5. [Usage Guide](#usage-guide)
+   - [(Insecure) Using the `--privileged` Option](#insecure-using-the-privileged-option)
+   - [(Secure) Using the `nestybox/sysbox` Runtime](#secure-using-the-nestyboxsysbox-runtime)
+6. [Use Cases](#use-cases)
+   - [Environment to Test Docker Images](#environment-to-test-docker-images)
+   - [Running Docker Commands Directly](#running-docker-commands-directly)
+   - [Extensibility (Automating Builds, Tests with Scripts)](#extensibility-automating-builds-tests-with-scripts)
+7. [Available Images](#available-images)
+
 ## Credits
 
 This project was inspired by two existing repositories:
