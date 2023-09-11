@@ -1,5 +1,3 @@
-# Ubuntu Docker-in-Docker (DinD) Image
-
 # Table of Contents
 1. [Ubuntu Docker-in-Docker (DinD) Image](#ubuntu-docker-in-docker-dind-image)
 2. [Credits](#credits)
@@ -8,13 +6,15 @@
    - [DinD with Docker Daemon Running in the Container: Solution](#dind-with-docker-daemon-running-in-the-container-solution)
 4. [Comparison: This DinD Project vs Existing Ones](#comparison-this-dind-project-vs-existing-ones)
 5. [Usage Guide](#usage-guide)
-   - [(Insecure) Using the `--privileged` Option](#insecure-using-the-privileged-option)
+   - [(Insecure) Using the `--privileged` Option](#insecure-using-the---privileged-option)
    - [(Secure) Using the `nestybox/sysbox` Runtime](#secure-using-the-nestyboxsysbox-runtime)
 6. [Use Cases](#use-cases)
    - [Environment to Test Docker Images](#environment-to-test-docker-images)
    - [Running Docker Commands Directly](#running-docker-commands-directly)
    - [Extensibility (Automating Builds, Tests with Scripts)](#extensibility-automating-builds-tests-with-scripts)
 7. [Available Images](#available-images)
+
+# Ubuntu Docker-in-Docker (DinD) Image
 
 ## Credits
 
@@ -29,7 +29,7 @@ On occasion, there is a need to operate Docker containers within other Docker co
 
 There are two methods to execute DinD:
 
-### 1. Docker-out-of-Docker (DooD) Using Socket Sharing
+### Docker-out-of-Docker (DooD) Using Socket Sharing: Challenges
 
 This strategy shares the socket from the host system located at `/var/run/docker.sock` utilizing `-v /var/run/docker.sock:/var/run/docker.sock`. Essentially, this technique allows us to spawn containers from the primary container, which is managed by the host system. However, any containers created within these secondary containers actually materialize only on the host system, not within the originating container itself. Two primary challenges often arise with this approach:
 
@@ -37,7 +37,7 @@ This strategy shares the socket from the host system located at `/var/run/docker
 
 - **Directory Volumes**: Suppose we plan to operate 'container-1' within 'container-2' and attempt to share a directory from 'container-1' to 'container-2' using volumes. In that case, this won't work. The reason lies in socket sharing - we're actually not sharing directories from the primary container; instead, we're sharing directories from the host machine. Although there are solutions to these challenges, they often tend to be complex and convoluted.
 
-### 2. DinD with Docker Daemon Running in the Container
+### DinD with Docker Daemon Running in the Container: Solution
 
 This method, although less secure (the `--privileged` option bypasses numerous containerization security features), enables the creation of a fresh container with Docker inside whenever required, effectively resolving network and volumes problems. You can now share folders from 'container-1' to 'container-2', created by 'container-1', and expose ports from 'container-2', accessible from 'container-1'.
 
@@ -45,7 +45,7 @@ But there are actually ways to run this container securely. You can use [nestybo
 
 You can see how to run this insecurely or securely in the [Usage Guide](#usage-guide) section.
 
-## What this DinD project offers versus the existing ones
+## Comparison: This DinD Project vs Existing Ones
 
 1. Based on Ubuntu as the primary OS for the image.
 2. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
@@ -57,7 +57,7 @@ You can see how to run this insecurely or securely in the [Usage Guide](#usage-g
 
 Test or use this image is quite simple, and you have two options to do it.
 
-### 1. (Insecure) Using the `--privileged` Option:
+### (Insecure) Using the `--privileged` Option:
 
 To use this Docker-in-Docker image, run the following command:
 
@@ -69,7 +69,7 @@ This launches a bash terminal with an independent Docker environment isolated fr
 
 It's not ready for production usage, but I find it useful for development and testing purposes.
 
-### 2. (Secure) Using the `nestybox/sysbox` Runtime:
+### (Secure) Using the `nestybox/sysbox` Runtime:
 
 For this option you need to have Sysbox installed in your system. You can see how to install it [here](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (Package installation works only in debian-based distros sadly).
 
@@ -79,9 +79,9 @@ To use this Docker-in-Docker image securely, run the following command:
 docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 ```
 
-## Some use cases
+## Use cases
 
-### 1. Have a clean environment to test your Docker images
+### Environment to Test Docker Images
 
 Simply running the image will give you a clean environment to test your Docker images.
 
@@ -96,7 +96,7 @@ docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 
 This will run a root bash terminal inside the container, where you can run docker commands.
 
-### 2. Run docker commands directly
+### Running Docker Commands Directly
 
 You can run commands directly to test images:
 
@@ -109,7 +109,7 @@ docker run -it --privileged cruizba/ubuntu-dind docker run hello-world
 docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind docker run hello-world
 ```
 
-### 3. Extensibility (automate builds, tests, etc. with custom scripts)
+### Extensibility (Automating Builds, Tests with Scripts)
 
 You can extend this image to add your own tools and configurations. I will create an example where I use this image to build this project and test it, to show you how to extend it and how powerful it can be.
 
