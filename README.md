@@ -1,49 +1,134 @@
-# Ubuntu DinD(Docker in Docker) Image
-
-## :warning::warning: WARNING :warning::warning:
-
-The option `--privileged` is not secure. I did this image just for little experiments, don't use for production. Just for dev or testing purposes.
-
-To do this in the GOOD AND SECURE WAY just use: https://github.com/nestybox/sysbox
-
+# Ubuntu Docker-in-Docker (DinD) Image
 
 ## Credits
 
-I've created this project as a combination of this two repositories:
-- The original idea comes from this project and it's a lighter solution: [DinD](https://github.com/alekslitvinenk/dind) by [alekslitvinenk](https://github.com/alekslitvinenk):
-The only difference of this project from the one created by @alekslitvinenk, is that my image is a modification with ubuntu as the base OS of the container.
-- [Docker](https://github.com/docker-library/docker) (literally a docker image of docker)
+This project was inspired by two existing repositories:
 
-## What is DinD and common problems.
+1. [DinD](https://github.com/alekslitvinenk/dind) by [alekslitvinenk](https://github.com/alekslitvinenk): This repository served as the foundational idea, offering a lightweight solution. The distinguishing feature of my project is the use of Ubuntu as the base OS for the container and some improvements I made with time.
+2. [Docker](https://github.com/docker-library/docker): This repository literally offers a Docker image of Docker.
 
-Sometimes we need to run docker containers inside other docker containers, with some "tricky" and "hacky" solution for CI/CD pipelines or software that requires a lot of virtualization... 
+## Understanding DinD and Its Challenges
 
-There are two ways to run DinD:
+On occasion, there is a need to operate Docker containers within other Docker containers often requiring workaround solutions, especially for usage in CI/CD pipelines or software demanding extensive virtualization.
 
-### 1. DinD with shared socket:
-One of the solutions consists on sharing the socket from the host system in `/var/run/docker.sock` with `-v /var/run/docker.sock:/var/run/docker.sock`. Doing that, we're not really using "docker inside docker", we're creating containers from the container, but they're still being running by the host machine. 
-This solution results in the following problems:
+There are two methods to execute DinD:
 
-- Networking problems: If we run a container inside another container, as the containers are running by the host, if we expose, for example, the port 3306, this port will be visible from the host, but not inside the container that launched the second container.
-- Directory volumes: If we want to run a container-1 inside a container-2 and share a direcoty from the container-1 to the container-2 with volumes... this will not work. ¿Why? When you run a container sharing the socket, you're not sharing directories from the container, you're sharing directories from the host machine!!. There are some tricks to solve this problems, but are a bit tricky. 
+### 1. Docker-out-of-Docker (DooD) Using Socket Sharing
 
-### 2. DinD with a daemon of docker running in the container
+This strategy shares the socket from the host system located at `/var/run/docker.sock` utilizing `-v /var/run/docker.sock:/var/run/docker.sock`. Essentially, this technique allows us to spawn containers from the primary container, which is managed by the host system. However, any containers created within these secondary containers actually materialize only on the host system, not within the originating container itself. Two primary challenges often arise with this approach:
 
-This is not the most secure way to run a container, (the `--privileged` option scapes lots of security features of containerization), but by running this image you can have a clean container with docker inside every time you want, and the network and volumes problems dissapears. You now can share folders from container-1 to the container-2 created by the container-1. And you can expose ports from container-2 and have access to this ports from container1.
+- **Networking Challenges**: With the DooD system, when a container is instantiated within another container, the host system manages both containers. Thus, if we run a container from the DooD container which exposes port 3306, for example, this port would be visible to the host but won't be accessible by the container that initiated it.
 
-## Why another DinD?
+- **Directory Volumes**: Suppose we plan to operate 'container-1' within 'container-2' and attempt to share a directory from 'container-1' to 'container-2' using volumes. In that case, this won't work. The reason lies in socket sharing - we're actually not sharing directories from the primary container; instead, we're sharing directories from the host machine. Although there are solutions to these challenges, they often tend to be complex and convoluted.
 
-I've created this repo for two reasons:
+### 2. DinD with Docker Daemon Running in the Container
 
-1. I want to have ubuntu as the main OS of the image.
-2. I want to extend it to create my own dev environments with docker available, getting ride of the common problems sharing sockets.
+This method, although less secure (the `--privileged` option bypasses numerous containerization security features), enables the creation of a fresh container with Docker inside whenever required, effectively resolving network and volumes problems. You can now share folders from 'container-1' to 'container-2', created by 'container-1', and expose ports from 'container-2', accessible from 'container-1'.
 
-## How to use it
+But there are actually ways to run this container securely. You can use [nestybox/sysbox](https://github.com/nestybox/sysbox) runtime to run this container securely. This runtime is a container runtime that enables Docker-in-Docker (DinD) with enhanced security and performance. It's a great alternative to the `--privileged` option.
 
-```
+You can see how to run this insecurely or securely in the [Usage Guide](#usage-guide) section.
+
+## What this DinD project offers versus the existing ones
+
+1. Based on Ubuntu as the primary OS for the image.
+2. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
+3. Support for arm64 and amd64 architectures.
+4. Easy to extend, customize and use.
+5. Always updated with current buildx, compose and docker versions.
+
+## Usage Guide
+
+Test or use this image is quite simple, and you have two options to do it.
+
+### 1. (Insecure) Using the `--privileged` Option:
+
+To use this Docker-in-Docker image, run the following command:
+
+```bash
 docker run -it --privileged cruizba/ubuntu-dind
 ```
 
-This will run a bash with a complete docker separated from your host to build, run and push docker images.
+This launches a bash terminal with an independent Docker environment isolated from your host, where you can build, run, and push Docker images.
 
+It's not ready for production usage, but I find it useful for development and testing purposes.
 
+### 2. (Secure) Using the `nestybox/sysbox` Runtime:
+
+For this option you need to have Sysbox installed in your system. You can see how to install it [here](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (Package installation works only in debian-based distros sadly).
+
+To use this Docker-in-Docker image securely, run the following command:
+
+```bash
+docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
+```
+
+## Some use cases
+
+### 1. Have a clean environment to test your Docker images
+
+Simply running the image will give you a clean environment to test your Docker images.
+
+- Insecure command:
+```bash
+docker run -it --privileged cruizba/ubuntu-dind
+```
+- Secure command:
+```bash
+docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
+```
+
+This will run a root bash terminal inside the container, where you can run docker commands.
+
+### 2. Run docker commands directly
+
+You can run commands directly to test images:
+
+- Insecure command:
+```bash
+docker run -it --privileged cruizba/ubuntu-dind docker run hello-world
+```
+- Secure command:
+```bash
+docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind docker run hello-world
+```
+
+### 3. Extensibility (automate builds, tests, etc. with custom scripts)
+
+You can extend this image to add your own tools and configurations. I will create an example where I use this image to build this project and test it, to show you how to extend it and how powerful it can be.
+
+```Dockerfile
+FROM cruizba/ubuntu-dind:latest
+
+# Install dependencies
+RUN apt-get update && apt-get install git -y
+
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+```
+
+**entrypoint.sh:**
+```bash
+#!/bin/bash
+
+# Start docker
+start-docker.sh
+
+# Your commands go here
+git clone https://github.com/cruizba/ubuntu-dind
+cd ubuntu-dind || exit 1
+docker build . -f ubuntu-jammy.Dockerfile -t ubuntu-dind-test
+
+docker run --privileged ubuntu-dind-test docker run hello-world
+```
+
+This script will clone this repository, build the image and run a container from it.
+
+It is very important to notice that you need to run the `start-docker.sh` script before using docker commands. This script will start the docker daemon inside the container.
+
+You have this example in the `examples` folder.
+
+### Available images
+
+You can find the available images in the [Docker Hub](https://hub.docker.com/r/cruizba/ubuntu-dind).
+Check also the Releases section to see the available tags: [Releases](https://github.com/cruizba/ubuntu-dind/releases)
