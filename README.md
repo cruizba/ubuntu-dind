@@ -21,7 +21,7 @@ A docker image based in ubuntu to run docker containers inside docker containers
    - [Environment to Test Docker Images](#41-environment-to-test-docker-images)
    - [Running Docker Commands Directly](#42-running-docker-commands-directly)
    - [Extensibility (Automating Builds, Tests with Scripts)](#43-extensibility-automating-builds-tests-with-scripts)
-5. [Available Images](#6-available-images)
+5. [Available Images](#5-available-images)
 
 ## 1. Credits
 
