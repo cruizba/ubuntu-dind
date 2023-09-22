@@ -2,11 +2,10 @@
 
 A docker image based in ubuntu to run docker containers inside docker containers with some extras:
 
-1. Based on Ubuntu as the primary OS for the image.
-2. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
-3. Support for arm64 and amd64 architectures.
-4. Easy to extend, customize and use.
-5. Always updated with current buildx, compose and docker versions.
+1. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
+2. Support for arm64 and amd64 architectures.
+3. Easy to extend, customize and use.
+4. Always updated with current buildx, compose and docker versions.
 
 ## Table of Contents
 
