@@ -6,7 +6,7 @@ A docker image based in ubuntu to run docker containers inside docker containers
 ```
 docker run -it --privileged cruizba/ubuntu-dind
 ```
-or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (secure way):
+or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md):
 ```
 docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 ```
