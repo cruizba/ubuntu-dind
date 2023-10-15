@@ -2,10 +2,18 @@
 
 A docker image based in ubuntu to run docker containers inside docker containers with some extras:
 
-1. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
-2. Support for arm64 and amd64 architectures.
-3. Easy to extend, customize and use.
-4. Always updated with current buildx, compose and docker versions.
+1. Easy to use ([More Info](#3-usage-guide)):
+```
+docker run -it --privileged cruizba/ubuntu-dind
+```
+or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (secure way):
+```
+docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind docker run hello-world
+```
+2. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
+3. Support for arm64 and amd64 architectures.
+4. Easy to extend, customize and use.
+5. Always updated with current buildx, compose and docker versions.
 
 ## Table of Contents
 
