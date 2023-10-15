@@ -8,7 +8,7 @@ docker run -it --privileged cruizba/ubuntu-dind
 ```
 or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (secure way):
 ```
-docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind docker run hello-world
+docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 ```
 2. Compatible with current LTS versions of Ubuntu (`focal` and `jammy`)
 3. Support for arm64 and amd64 architectures.
