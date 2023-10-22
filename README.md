@@ -1,4 +1,4 @@
-# Ubuntu Docker-in-Docker (DinD) Image
+# Ubuntu DinD(Docker in Docker) Image
 
 A docker image based in ubuntu to run docker containers inside docker containers with some extras:
 
