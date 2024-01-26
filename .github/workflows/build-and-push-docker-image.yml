@@ -35,3 +35,11 @@ jobs:
           file: ubuntu-jammy.Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: cruizba/ubuntu-dind:jammy-${{ github.ref_name }},cruizba/ubuntu-dind:latest
+
+      - name: Ubuntu 24.04 - Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          file: ubuntu-noble.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          tags: cruizba/ubuntu-dind:noble-${{ github.ref_name }}
