@@ -42,7 +42,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: >
             cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
             cruizba/ubuntu-dind:latest
 
       - name: Ubuntu 24.04 - Build and push
