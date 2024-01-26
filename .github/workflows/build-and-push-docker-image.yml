@@ -8,6 +8,12 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate version
+        run: |
+          VERSION=$(echo "${{ github.ref_name }}"
+          DATE=$(date +%Y%m%d%H%M%S)
+          echo "DATE_TAG=${VERSION}-${DATE}" >> $GITHUB_ENV
+          echo "TAG=${VERSION}" >> $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -26,7 +32,9 @@ jobs:
           push: true
           file: ubuntu-focal.Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: cruizba/ubuntu-dind:focal-${{ github.ref_name }}
+          tags: >
+            cruizba/ubuntu-dind:focal-${{ env.TAG }},
+            cruizba/ubuntu-dind:focal-${{ env.DATE_TAG }}
 
       - name: Ubuntu 22.04 - Build and push
         uses: docker/build-push-action@v5
@@ -34,7 +42,10 @@ jobs:
           push: true
           file: ubuntu-jammy.Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: cruizba/ubuntu-dind:jammy-${{ github.ref_name }},cruizba/ubuntu-dind:latest
+          tags: >
+            cruizba/ubuntu-dind:jammy-${{ env.TAG }},
+            cruizba/ubuntu-dind:jammy-${{ env.DATE_TAG }}
+            cruizba/ubuntu-dind:latest
 
       - name: Ubuntu 24.04 - Build and push
         uses: docker/build-push-action@v5
@@ -42,4 +53,6 @@ jobs:
           push: true
           file: ubuntu-noble.Dockerfile
           platforms: linux/amd64,linux/arm64
-          tags: cruizba/ubuntu-dind:noble-${{ github.ref_name }}
+          tags: >
+            cruizba/ubuntu-dind:noble-${{ env.TAG }},
+            cruizba/ubuntu-dind:noble-${{ env.DATE_TAG }}
