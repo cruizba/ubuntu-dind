@@ -6,8 +6,8 @@ RUN apt update \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=25.0.0 \
-	DOCKER_COMPOSE_VERSION=v2.24.1 \
+	DOCKER_VERSION=25.0.1 \
+	DOCKER_COMPOSE_VERSION=v2.24.2 \
 	BUILDX_VERSION=v0.12.1 \
 	DEBUG=false
 
