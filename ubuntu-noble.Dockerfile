@@ -3,8 +3,7 @@ FROM ubuntu:24.04
 RUN apt update \
     && apt install -y ca-certificates \
     wget curl iptables supervisor \
-    && rm -rf /var/lib/apt/list/* \
-    && update-alternatives --set iptables /usr/sbin/iptables-legacy
+    && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
 	DOCKER_VERSION=25.0.3 \
