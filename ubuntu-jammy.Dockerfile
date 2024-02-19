@@ -7,7 +7,8 @@ RUN apt update \
     wget curl iptables supervisor \
     less \
     git git-lfs \
-    dotnet-runtime-7.0 \
+    unzip \
+    dotnet-sdk-7.0 \
     && rm -rf /var/lib/apt/list/* \
     && update-alternatives --set iptables /usr/sbin/iptables-legacy
 
