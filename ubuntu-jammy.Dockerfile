@@ -1,8 +1,13 @@
+# based on cruizba/ubuntu-dind, with addition of git, dotnet-runtime (for AZDO GitVersion) and less (of course)
+#
 FROM ubuntu:22.04
 
 RUN apt update \
     && apt install -y ca-certificates \
     wget curl iptables supervisor \
+    less \
+    git git-lfs \
+    dotnet-runtime-7.0 \
     && rm -rf /var/lib/apt/list/* \
     && update-alternatives --set iptables /usr/sbin/iptables-legacy
 
