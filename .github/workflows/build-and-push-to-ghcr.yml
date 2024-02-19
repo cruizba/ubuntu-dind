@@ -61,6 +61,6 @@ jobs:
           file: ubuntu-noble.Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: >
-            ghcr.io/${{ secrets.GITHUB_REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04,
-            ghcr.io/${{ secrets.GITHUB_REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04-${{ env.CURRENT_VERSION }},
-            ghcr.io/${{ secrets.GITHUB_REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04,
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04-${{ env.CURRENT_VERSION }},
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:24.04-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
