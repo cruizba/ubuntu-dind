@@ -27,7 +27,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.REPOSITORY_OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Ubuntu 20.04 - Build and push
@@ -37,8 +37,8 @@ jobs:
           file: ubuntu-focal.Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: >
-            ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/ubuntu-dind:focal-${{ env.CURRENT_VERSION }},
-            ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/ubuntu-dind:focal-${{ env.CURRENT_VERSION }},
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
 
       - name: Ubuntu 22.04 - Build and push
         uses: docker/build-push-action@v5
@@ -47,9 +47,9 @@ jobs:
           file: ubuntu-jammy.Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: >
-            ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
-            ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            ghcr.io/${{ github.GITHUB_REPOSITORY_OWNER }}/ubuntu-dind:latest
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
+            ghcr.io/${{ github.REPOSITORY_OWNER }}ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
+            ghcr.io/${{ github.REPOSITORY_OWNER }}/ubuntu-dind:latest
 
       - name: Ubuntu 24.04 - Build and push
         uses: docker/build-push-action@v5
