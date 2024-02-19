@@ -7,7 +7,6 @@ RUN apt update \
     wget curl iptables supervisor \
     less \
     git git-lfs \
-    dotnet-runtime-7.0 \
     && rm -rf /var/lib/apt/list/*
 
 ENV DOCKER_CHANNEL=stable \
