@@ -31,16 +31,17 @@ jobs:
           username: ${{ github.REPOSITORY_OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Ubuntu 20.04 - Build and push
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          file: ubuntu-focal.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: >
-            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04,
-            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04-${{ env.CURRENT_VERSION }},
-            ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+      # # doesn't support dotnet in default apt repos... 
+      # - name: Ubuntu 20.04 - Build and push
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     push: true
+      #     file: ubuntu-focal.Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     tags: >
+      #       ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04,
+      #       ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04-${{ env.CURRENT_VERSION }},
+      #       ghcr.io/${{ github.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:20.04-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
 
       - name: Ubuntu 22.04 - Build and push
         uses: docker/build-push-action@v5
