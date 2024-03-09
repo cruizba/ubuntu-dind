@@ -7,9 +7,9 @@ RUN apt update \
     && update-alternatives --set iptables /usr/sbin/iptables-legacy
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=25.0.3 \
-	DOCKER_COMPOSE_VERSION=v2.24.5 \
-	BUILDX_VERSION=v0.12.1 \
+	DOCKER_VERSION=25.0.4 \
+	DOCKER_COMPOSE_VERSION=v2.24.6 \
+	BUILDX_VERSION=v0.13.0 \
 	DEBUG=false
 
 # Docker and buildx installation
