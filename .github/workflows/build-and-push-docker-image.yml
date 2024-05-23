@@ -43,7 +43,6 @@ jobs:
           tags: >
             cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
             cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            cruizba/ubuntu-dind:latest
 
       - name: Ubuntu 24.04 - Build and push
         uses: docker/build-push-action@v5
@@ -54,3 +53,4 @@ jobs:
           tags: >
             cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }},
             cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind:latest
