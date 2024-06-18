@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Ubuntu 20.04 - Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           file: ubuntu-focal.Dockerfile
@@ -35,7 +35,7 @@ jobs:
             cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
 
       - name: Ubuntu 22.04 - Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           file: ubuntu-jammy.Dockerfile
@@ -45,7 +45,7 @@ jobs:
             cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
 
       - name: Ubuntu 24.04 - Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           file: ubuntu-noble.Dockerfile
