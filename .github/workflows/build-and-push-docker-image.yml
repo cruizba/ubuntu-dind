@@ -5,7 +5,7 @@ on:
     types: [published]
   workflow_dispatch:
 env:
-  CURRENT_VERSION: 27.0.1
+  CURRENT_VERSION: 27.0.2
   BUILD_NUMBER: 0
 
 jobs:
