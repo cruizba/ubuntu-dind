@@ -32,7 +32,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: >
             cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
             cruizba/ubuntu-dind:focal-latest
 
       - name: Ubuntu 22.04 - Build and push
@@ -43,7 +43,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: >
             cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
             cruizba/ubuntu-dind:jammy-latest
 
       - name: Ubuntu 24.04 - Build and push
@@ -55,5 +55,5 @@ jobs:
           tags: >
             cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }},
             cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            cruizba/ubuntu-dind:noble-latest
+            cruizba/ubuntu-dind:noble-latest,
             cruizba/ubuntu-dind:latest
