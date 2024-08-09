@@ -5,8 +5,8 @@ on:
     types: [published]
   workflow_dispatch:
 env:
-  CURRENT_VERSION: 27.0.3
-  BUILD_NUMBER: 1
+  CURRENT_VERSION: 27.1.0
+  BUILD_NUMBER: 0
 
 jobs:
   docker:
