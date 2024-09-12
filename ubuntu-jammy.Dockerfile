@@ -7,7 +7,7 @@ RUN apt update \
     && update-alternatives --set iptables /usr/sbin/iptables-legacy
 
 ENV DOCKER_CHANNEL=stable \
-	DOCKER_VERSION=27.2.0 \
+	DOCKER_VERSION=27.2.1 \
 	DOCKER_COMPOSE_VERSION=v2.29.2 \
 	BUILDX_VERSION=v0.16.2 \
 	DEBUG=false
