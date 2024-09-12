@@ -4,14 +4,28 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+
 env:
   CURRENT_VERSION: 27.2.1
   BUILD_NUMBER: 0
+  LATEST_UBUNTU_VERSION: "24.04"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - ubuntu_version: "20.04"
+            ubuntu_name: "focal"
+          - ubuntu_version: "22.04"
+            ubuntu_name: "jammy"
+          - ubuntu_version: "24.04"
+            ubuntu_name: "noble"
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -24,36 +38,16 @@ jobs:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Ubuntu 20.04 - Build and push
+      - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: ubuntu-focal.Dockerfile
+          file: Dockerfile.template
           platforms: linux/amd64,linux/arm64
-          tags: >
-            cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:focal-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            cruizba/ubuntu-dind:focal-latest
-
-      - name: Ubuntu 22.04 - Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          file: ubuntu-jammy.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: >
-            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:jammy-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            cruizba/ubuntu-dind:jammy-latest
-
-      - name: Ubuntu 24.04 - Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          file: ubuntu-noble.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: >
-            cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }},
-            cruizba/ubuntu-dind:noble-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }},
-            cruizba/ubuntu-dind:noble-latest,
-            cruizba/ubuntu-dind:latest
+          build-args: |
+            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+          tags: |
+            cruizba/ubuntu-dind-test:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}
+            cruizba/ubuntu-dind-test:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind-test:${{ matrix.ubuntu_name }}-latest
+            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind-test:latest' || '' }}
