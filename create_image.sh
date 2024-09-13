@@ -1,21 +1,15 @@
 #!/bin/bash
 
-# Set versions
 DOCKER_VERSION="27.2.1"
 BUILD_NUMBER="0"
 LATEST_UBUNTU_VERSION="24.04"
 
-# Define Ubuntu versions and names
 declare -A ubuntu_versions=(
   ["20.04"]="focal"
   ["22.04"]="jammy"
   ["24.04"]="noble"
 )
 
-# Remove all Docker images
-docker rmi $(docker images -q) -f
-
-# Function to build image
 build_image() {
     local ubuntu_version=$1
     local ubuntu_name=$2
@@ -34,7 +28,6 @@ build_image() {
     fi
 }
 
-# Build images for all Ubuntu versions
 for version in "${!ubuntu_versions[@]}"; do
     build_image "$version" "${ubuntu_versions[$version]}"
 done
