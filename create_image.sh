@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOCKER_VERSION="27.3.1"
-BUILD_NUMBER="2"
+BUILD_NUMBER="3"
 LATEST_UBUNTU_VERSION="24.04"
 
 declare -A ubuntu_versions=(
