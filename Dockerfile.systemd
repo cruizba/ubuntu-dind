@@ -1,0 +1,98 @@
+# This Dockerfile is based upon sysbox example images: https://github.com/nestybox/dockerfiles/
+# but with some modifications to have a more generic image.
+ARG UBUNTU_VERSION="24.04"
+FROM ubuntu:${UBUNTU_VERSION}
+
+ARG UBUNTU_VERSION
+ENV DOCKER_VERSION=27.4.0 \
+    DOCKER_COMPOSE_VERSION=v2.32.0 \
+    BUILDX_VERSION=v0.19.1
+
+#
+# Systemd installation
+#
+RUN apt-get update &&                            \
+    apt-get install -y --no-install-recommends   \
+            systemd                              \
+            systemd-sysv                         \
+            libsystemd0                          \
+            ca-certificates                      \
+            dbus                                 \
+            iptables                             \
+            iproute2                             \
+            kmod                                 \
+            locales                              \
+            sudo                                 \
+            udev &&                              \
+                                                 \
+    # Prevents journald from reading kernel messages from /dev/kmsg
+    echo "ReadKMsg=no" >> /etc/systemd/journald.conf &&               \
+                                                                      \
+    # Housekeeping
+    apt-get clean -y &&                                               \
+    rm -rf                                                            \
+       /var/cache/debconf/*                                           \
+       /var/lib/apt/lists/*                                           \
+       /var/log/*                                                     \
+       /tmp/*                                                         \
+       /var/tmp/*                                                     \
+       /usr/share/doc/*                                               \
+       /usr/share/man/*                                               \
+       /usr/share/local/* &&                                          \
+                                                                      \
+    # Create default 'admin/admin' user
+    useradd --create-home --shell /bin/bash admin && echo "admin:admin" | chpasswd && adduser admin sudo
+
+# Disable systemd services/units that are unnecessary within a container.
+RUN systemctl mask systemd-udevd.service \
+                   systemd-udevd-kernel.socket \
+                   systemd-udevd-control.socket \
+                   systemd-modules-load.service \
+                   sys-kernel-debug.mount \
+                   sys-kernel-tracing.mount
+
+# Set iptables-legacy for Ubuntu 22.04 and newer
+RUN set -eux; \
+    if [ "${UBUNTU_VERSION}" != "20.04" ]; then \
+    update-alternatives --set iptables /usr/sbin/iptables-legacy; \
+    fi
+
+# Install Docker
+RUN apt-get update && apt-get install -y wget curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh --version ${DOCKER_VERSION} \
+    # Add user "admin" to the Docker group
+    && usermod -a -G docker admin \
+    && rm get-docker.sh \
+    && docker --version
+
+# Install buildx
+RUN set -eux; \
+    arch="$(uname -m)"; \
+    case "$arch" in \
+        x86_64) dockerArch='x86_64' ; buildx_arch='linux-amd64' ;; \
+        armhf) dockerArch='armel' ; buildx_arch='linux-arm-v6' ;; \
+        armv7) dockerArch='armhf' ; buildx_arch='linux-arm-v7' ;; \
+        aarch64) dockerArch='aarch64' ; buildx_arch='linux-arm64' ;; \
+        *) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;; \
+    esac && \
+    wget -O docker-buildx "https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.${buildx_arch}" && \
+    mkdir -p /usr/local/lib/docker/cli-plugins && \
+    chmod +x docker-buildx && \
+    mv docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx && \
+    docker buildx version
+
+# Install Docker Compose
+RUN curl --retry 5 --retry-max-time 40 \
+    --write-out "%{http_code}\n" \
+    -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" \
+    -o /usr/local/bin/docker-compose && \
+    chmod 755 /usr/local/bin/docker-compose && \
+    mkdir -p /usr/local/lib/docker/cli-plugins && \
+    ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+
+# Make use of stopsignal (instead of sigterm) to stop systemd containers.
+STOPSIGNAL SIGRTMIN+3
+
+# Set systemd as entrypoint.
+ENTRYPOINT [ "/sbin/init", "--log-level=err" ]
