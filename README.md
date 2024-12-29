@@ -4,7 +4,6 @@ A docker image based in ubuntu to run docker containers inside docker containers
 
 1. Easy to use ([More Info](#3-usage-guide)):
 > [!WARNING]
-> ## :warning::warning: WARNING :warning::warning:
 > The option `--privileged` is not secure. Just for dev or testing purposes.
 > To do this in the GOOD AND SECURE WAY just use: https://github.com/nestybox/sysbox
 ```
