@@ -176,7 +176,7 @@ All tags are released in this format:
 - **Fixed images**: Images with a fixed version of Docker, Docker Compose and Docker Buildx. You can check each version in the Releases section. If releases of Docker are slow from time to time, revisions will be released to keep the base image updated.
 - **Fixed images and revision**: These images are the most stable images. They have a fixed version of Docker, Docker Compose and Docker Buildx and a revision number. Once released, they will not be updated.
 - **Latest images per Ubuntu version**: These images are the latest images for each Ubuntu version. They will be updated with the latest versions of Docker, Docker Compose and Docker Buildx.
-- **Latest images**: These images are the latest images for all Ubuntu versions. They will be updated with the latest versions of Docker, Docker Compose and Docker Buildx and with the latest Ubuntu version.
+- **Latest images**: These images are the latest Docker, Docker Compose and Docker Buildx versions for the latest Ubuntu version.
 
 ### Fixed images
 
