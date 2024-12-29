@@ -1,3 +1,8 @@
+[![GitHub Repo stars](https://img.shields.io/github/stars/cruizba/ubuntu-dind)](https://github.com/cruizba/ubuntu-dind)
+[![GitHub Release Date](https://img.shields.io/github/release-date/cruizba/ubuntu-dind)](https://github.com/cruizba/ubuntu-dind/releases)
+
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/cruizba)](https://x.com/cruizba)
+
 # Ubuntu DinD(Docker in Docker) Image
 
 A docker image based in ubuntu to run docker containers inside docker containers with some extras:
