@@ -37,8 +37,8 @@ build_systemd_image() {
 
     docker build \
         --build-arg UBUNTU_VERSION=${ubuntu_version} \
-        -t cruizba/ubuntu-dind:${ubuntu_name}-${DOCKER_VERSION}-systemd \
-        -t cruizba/ubuntu-dind:${ubuntu_name}-${DOCKER_VERSION}-systemd-r${BUILD_NUMBER} \
+        -t cruizba/ubuntu-dind:${ubuntu_name}-systemd-${DOCKER_VERSION} \
+        -t cruizba/ubuntu-dind:${ubuntu_name}-systemd-${DOCKER_VERSION}-r${BUILD_NUMBER} \
         -t cruizba/ubuntu-dind:${ubuntu_name}-systemd-latest \
         -f Dockerfile.systemd .
 

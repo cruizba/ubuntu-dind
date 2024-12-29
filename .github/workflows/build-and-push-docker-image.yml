@@ -61,7 +61,7 @@ jobs:
           build-args: |
             UBUNTU_VERSION=${{ matrix.ubuntu_version }}
           tags: |
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-systemd
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-systemd-r${{ env.BUILD_NUMBER }}
+            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}
+            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:systemd-latest' || '' }}

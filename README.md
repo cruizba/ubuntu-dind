@@ -187,9 +187,9 @@ cruizba/ubuntu-dind:jammy-<docker-version>
 cruizba/ubuntu-dind:noble-<docker-version>
 
 # Systemd images
-cruizba/ubuntu-dind:focal-<docker-version>-systemd
-cruizba/ubuntu-dind:jammy-<docker-version>-systemd
-cruizba/ubuntu-dind:noble-<docker-version>-systemd
+cruizba/ubuntu-dind:focal-systemd-<docker-version>
+cruizba/ubuntu-dind:jammy-systemd-<docker-version>
+cruizba/ubuntu-dind:noble-systemd-<docker-version>
 ```
 
 ### Fixed images and revision
@@ -201,9 +201,9 @@ cruizba/ubuntu-dind:jammy-<docker-version>-r<revision>
 cruizba/ubuntu-dind:noble-<docker-version>-r<revision>
 
 # Systemd images
-cruizba/ubuntu-dind:focal-<docker-version>-systemd-r<revision>
-cruizba/ubuntu-dind:jammy-<docker-version>-systemd-r<revision>
-cruizba/ubuntu-dind:noble-<docker-version>-systemd-r<revision>
+cruizba/ubuntu-dind:focal-systemd-<docker-version>-r<revision>
+cruizba/ubuntu-dind:jammy-systemd-<docker-version>-r<revision>
+cruizba/ubuntu-dind:noble-systemd-<docker-version>-r<revision>
 ```
 
 ### Latest Images per Ubuntu version:
