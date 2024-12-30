@@ -234,3 +234,9 @@ cruizba/ubuntu-dind:latest
 # Systemd images
 cruizba/ubuntu-dind:systemd-latest
 ```
+
+## 6. Support what I do
+
+If you like what I do, you can support me as a GitHub Sponsor. I will be very grateful for your support.
+
+[![GitHub Sponsors](https://img.shields.io/badge/Sponsor%20me%20on-GitHub-green?style=for-the-badge&logo=github)](https://github.com/sponsors/cruizba)
