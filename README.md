@@ -37,6 +37,7 @@ docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
    - [Running Docker Commands Directly](#42-running-docker-commands-directly)
    - [Extensibility (Automating Builds, Tests with Scripts)](#43-extensibility-automating-builds-tests-with-scripts)
 5. [Available Images](#5-available-images)
+6. [Support what I do](#6-support-what-i-do)
 
 ## 1. Credits
 
