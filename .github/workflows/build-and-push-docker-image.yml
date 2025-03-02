@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  CURRENT_VERSION: 27.5.1
-  BUILD_NUMBER: 1
+  CURRENT_VERSION: 28.0.0
+  BUILD_NUMBER: 0
   LATEST_UBUNTU_VERSION: "24.04"
 
 jobs:
@@ -28,10 +28,6 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        # Temporary workaround for ARM builds
-        # https://github.com/docker/setup-qemu-action/issues/198
-        with:
-          image: tonistiigi/binfmt:qemu-v7.0.0-28
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
