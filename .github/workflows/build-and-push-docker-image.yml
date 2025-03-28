@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  CURRENT_VERSION: 28.0.1
-  BUILD_NUMBER: 1
+  CURRENT_VERSION: 28.0.2
+  BUILD_NUMBER: 0
   LATEST_UBUNTU_VERSION: "24.04"
 
 jobs:
