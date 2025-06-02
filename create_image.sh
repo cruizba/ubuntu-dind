@@ -6,7 +6,6 @@ BUILD_NUMBER="0"
 LATEST_UBUNTU_VERSION="24.04"
 
 declare -A ubuntu_versions=(
-  ["20.04"]="focal"
   ["22.04"]="jammy"
   ["24.04"]="noble"
 )
