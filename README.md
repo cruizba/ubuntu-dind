@@ -18,7 +18,7 @@ or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/
 ```
 docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 ```
-2. Compatible with current LTS versions of Ubuntu (`focal`, `jammy` and `noble`)
+2. Compatible with current LTS versions of Ubuntu (`jammy` and `noble`)
 3. Support for arm64 and amd64 architectures.
 4. Easy to extend, customize and use.
 5. Always updated with current buildx, compose and docker versions.
