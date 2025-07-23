@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-dind
+spec:
+  containers:
+  - name: ubuntu-dind
+    image: cruizba/ubuntu-dind:systemd-latest
+    args: ["sleep", "infinity"]
+    securityContext:
+      privileged: true
+  restartPolicy: Never
