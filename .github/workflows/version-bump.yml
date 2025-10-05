@@ -1,0 +1,138 @@
+name: Version Bump and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_version:
+        description: 'Docker version (e.g., 28.4.1)'
+        required: true
+        type: string
+      docker_compose_version:
+        description: 'Docker Compose version (e.g., v2.40.0)'
+        required: true
+        type: string
+      buildx_version:
+        description: 'Docker Buildx version (e.g., v0.28.1)'
+        required: true
+        type: string
+      build_number:
+        description: 'Build number (usually 0 for first release)'
+        required: true
+        type: string
+        default: '0'
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up GitHub CLI
+        uses: cli/cli@v3
+        with:
+          version: latest
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+      - name: Update version in Dockerfile
+        run: |
+          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\/" Dockerfile
+          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\/" Dockerfile
+          sed -i "s/BUILDX_VERSION=.*/BUILDX_VERSION=${{ inputs.buildx_version }} \\/" Dockerfile
+
+      - name: Update version in Dockerfile.systemd
+        run: |
+          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\/" Dockerfile.systemd
+          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\/" Dockerfile.systemd
+          sed -i "s/BUILDX_VERSION=.*/BUILDX_VERSION=${{ inputs.buildx_version }}/" Dockerfile.systemd
+
+      - name: Update version in create_image.sh
+        run: |
+          sed -i 's/DOCKER_VERSION=.*/DOCKER_VERSION="${{ inputs.docker_version }}"/' create_image.sh
+          sed -i 's/BUILD_NUMBER=.*/BUILD_NUMBER="${{ inputs.build_number }}"/' create_image.sh
+
+      - name: Update version in build workflow
+        run: |
+          sed -i 's/CURRENT_VERSION:.*/CURRENT_VERSION: ${{ inputs.docker_version }}/' .github/workflows/build-and-push-docker-image.yml
+          sed -i 's/BUILD_NUMBER:.*/BUILD_NUMBER: ${{ inputs.build_number }}/' .github/workflows/build-and-push-docker-image.yml
+
+      - name: Show changes
+        run: |
+          echo "Changes made:"
+          git diff --name-only
+          git diff
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Bump versions to Docker ${{ inputs.docker_version }}, Compose ${{ inputs.docker_compose_version }}, Buildx ${{ inputs.buildx_version }}"
+          git push
+
+      - name: Create Release Notes
+        id: release_notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## Versions used:
+
+          Docker version: ${{ inputs.docker_version }}
+          Docker compose version: ${{ inputs.docker_compose_version }}
+          Docker buildx: ${{ inputs.buildx_version }}
+
+          ## Dockerhub images
+
+          > Updated images
+          ```bash
+          # Normal images
+          cruizba/ubuntu-dind:jammy-${{ inputs.docker_version }}
+          cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}
+
+          # SystemD images
+          cruizba/ubuntu-dind:jammy-systemd-${{ inputs.docker_version }}
+          cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}
+          ```
+
+          > Fixed images
+          ```bash
+          # Normal images
+          cruizba/ubuntu-dind:jammy-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+          cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+
+          # SystemD images
+          cruizba/ubuntu-dind:jammy-systemd-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+          cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+          ```
+
+          > Latest Images per Ubuntu version:
+          ```bash
+          # Normal images
+          cruizba/ubuntu-dind:jammy-latest
+          cruizba/ubuntu-dind:noble-latest
+
+          # Systemd images
+          cruizba/ubuntu-dind:jammy-systemd-latest
+          cruizba/ubuntu-dind:noble-systemd-latest
+          ```
+
+          > Latest normal Image: `cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}`
+          ```
+          cruizba/ubuntu-dind:latest
+          ```
+
+          > Latest Systemd Image: `cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}`
+          ```
+          cruizba/ubuntu-dind:systemd-latest
+          ```
+          EOF
+
+      - name: Create Release
+        run: |
+          gh release create "${{ inputs.docker_version }}-r${{ inputs.build_number }}" \
+            --title "${{ inputs.docker_version }}-r${{ inputs.build_number }}" \
+            --notes-file release_notes.md
