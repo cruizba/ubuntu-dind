@@ -6,14 +6,17 @@ on:
       docker_version:
         description: 'Docker version (e.g., 28.4.1)'
         required: true
+        default: 28.5.0
         type: string
       docker_compose_version:
         description: 'Docker Compose version (e.g., v2.40.0)'
         required: true
+        default: v2.40.0
         type: string
       buildx_version:
         description: 'Docker Buildx version (e.g., v0.28.1)'
         required: true
+        default: v0.29.0
         type: string
       build_number:
         description: 'Build number (usually 0 for first release)'
@@ -62,6 +65,12 @@ jobs:
         run: |
           sed -i 's/CURRENT_VERSION:.*/CURRENT_VERSION: ${{ inputs.docker_version }}/' .github/workflows/build-and-push-docker-image.yml
           sed -i 's/BUILD_NUMBER:.*/BUILD_NUMBER: ${{ inputs.build_number }}/' .github/workflows/build-and-push-docker-image.yml
+
+      - name: Update default values in version-bump workflow
+        run: |
+          sed -i '/docker_version:/,/type: string/ s/default: .*/default: ${{ inputs.docker_version }}/' .github/workflows/version-bump.yml
+          sed -i '/docker_compose_version:/,/type: string/ s/default: .*/default: ${{ inputs.docker_compose_version }}/' .github/workflows/version-bump.yml
+          sed -i '/buildx_version:/,/type: string/ s/default: .*/default: ${{ inputs.buildx_version }}/' .github/workflows/version-bump.yml
 
       - name: Show changes
         run: |
