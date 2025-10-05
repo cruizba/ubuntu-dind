@@ -13,6 +13,8 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     strategy:
       matrix:
         include:
