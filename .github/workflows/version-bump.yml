@@ -40,14 +40,14 @@ jobs:
 
       - name: Update version in Dockerfile
         run: |
-          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\/" Dockerfile
-          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\/" Dockerfile
-          sed -i "s/BUILDX_VERSION=.*/BUILDX_VERSION=${{ inputs.buildx_version }} \\/" Dockerfile
+          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\\\/" Dockerfile
+          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\\\/" Dockerfile
+          sed -i "s/BUILDX_VERSION=.*/BUILDX_VERSION=${{ inputs.buildx_version }} \\\\/" Dockerfile
 
       - name: Update version in Dockerfile.systemd
         run: |
-          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\/" Dockerfile.systemd
-          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\/" Dockerfile.systemd
+          sed -i "s/DOCKER_VERSION=.*/DOCKER_VERSION=${{ inputs.docker_version }} \\\\/" Dockerfile.systemd
+          sed -i "s/DOCKER_COMPOSE_VERSION=.*/DOCKER_COMPOSE_VERSION=${{ inputs.docker_compose_version }} \\\\/" Dockerfile.systemd
           sed -i "s/BUILDX_VERSION=.*/BUILDX_VERSION=${{ inputs.buildx_version }}/" Dockerfile.systemd
 
       - name: Update version in create_image.sh
