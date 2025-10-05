@@ -60,11 +60,11 @@ jobs:
           sed -i 's/CURRENT_VERSION:.*/CURRENT_VERSION: ${{ inputs.docker_version }}/' .github/workflows/build-and-push-docker-image.yml
           sed -i 's/BUILD_NUMBER:.*/BUILD_NUMBER: ${{ inputs.build_number }}/' .github/workflows/build-and-push-docker-image.yml
 
-      - name: Update default values in version-bump workflow
+      - name: Update default versions in version-bump workflow
         run: |
-          sed -i '/docker_version:/,/type: string/ s/default: .*/default: ${{ inputs.docker_version }}/' .github/workflows/version-bump.yml
-          sed -i '/docker_compose_version:/,/type: string/ s/default: .*/default: ${{ inputs.docker_compose_version }}/' .github/workflows/version-bump.yml
-          sed -i '/buildx_version:/,/type: string/ s/default: .*/default: ${{ inputs.buildx_version }}/' .github/workflows/version-bump.yml
+          sed -i '/docker_version:/,/type: string/s/default: [0-9]\+\.[0-9]\+\.[0-9]\+/default: ${{ inputs.docker_version }}/' .github/workflows/version-bump.yml
+          sed -i '/docker_compose_version:/,/type: string/s/default: v[0-9]\+\.[0-9]\+\.[0-9]\+/default: ${{ inputs.docker_compose_version }}/' .github/workflows/version-bump.yml
+          sed -i '/buildx_version:/,/type: string/s/default: v[0-9]\+\.[0-9]\+\.[0-9]\+/default: ${{ inputs.buildx_version }}/' .github/workflows/version-bump.yml
 
       - name: Show changes
         run: |
