@@ -33,7 +33,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_WORKFLOW_TOKEN }}
 
       - name: Configure Git
         run: |
@@ -138,7 +138,7 @@ jobs:
 
       - name: Create Release
         env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GH_TOKEN: ${{ secrets.GH_WORKFLOW_TOKEN }}
         run: |
           gh release create "${{ inputs.docker_version }}-r${{ inputs.build_number }}" \
             --title "${{ inputs.docker_version }}-r${{ inputs.build_number }}" \
