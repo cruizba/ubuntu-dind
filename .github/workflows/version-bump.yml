@@ -77,7 +77,7 @@ jobs:
       - name: Commit changes
         run: |
           git add .
-          git commit -m "Bump versions to Docker ${{ inputs.docker_version }}, Compose ${{ inputs.docker_compose_version }}, Buildx ${{ inputs.buildx_version }}", build number ${{ inputs.build_number }}
+          git commit -m "Bump versions to Docker ${{ inputs.docker_version }}, Compose ${{ inputs.docker_compose_version }}, Buildx ${{ inputs.buildx_version }}, build number ${{ inputs.build_number }}"
           git push
 
       - name: Create Release Notes
