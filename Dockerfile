@@ -20,7 +20,14 @@ RUN set -eux; \
     update-alternatives --set iptables /usr/sbin/iptables-legacy; \
     fi
 
-# Install Docker and buildx
+# Install Docker
+RUN apt-get update && apt-get install -y wget curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh --version ${DOCKER_VERSION} \
+    && rm get-docker.sh \
+    && docker --version
+
+# Install buildx
 RUN set -eux; \
     arch="$(uname -m)"; \
     case "$arch" in \
@@ -30,15 +37,10 @@ RUN set -eux; \
         aarch64) dockerArch='aarch64' ; buildx_arch='linux-arm64' ;; \
         *) echo >&2 "error: unsupported architecture ($arch)"; exit 1 ;; \
     esac && \
-    wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz" && \
-    tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin/ && \
-    rm docker.tgz && \
     wget -O docker-buildx "https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.${buildx_arch}" && \
     mkdir -p /usr/local/lib/docker/cli-plugins && \
     chmod +x docker-buildx && \
     mv docker-buildx /usr/local/lib/docker/cli-plugins/docker-buildx && \
-    dockerd --version && \
-    docker --version && \
     docker buildx version
 
 COPY modprobe start-docker.sh entrypoint.sh /usr/local/bin/
