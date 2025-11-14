@@ -60,5 +60,16 @@ RUN set -eux; \
     docker-compose version && \
     ln -s /usr/local/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
 
+# TODO: Remove when this issue is fixed: https://github.com/nestybox/sysbox/issues/973
+# Temporarly fix containerd version
+RUN set -eux; \
+    . /etc/os-release; \
+    if [ -z "${VERSION_ID:-}" ] || [ -z "${VERSION_CODENAME:-}" ]; then \
+        echo "Unable to detect Ubuntu version metadata"; exit 1; \
+    fi; \
+    apt-get update; \
+    apt-get install -y --allow-downgrades "containerd.io=1.7.28-1~ubuntu.${VERSION_ID}~${VERSION_CODENAME}" && \
+    apt-mark hold containerd.io
+
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["bash"]
