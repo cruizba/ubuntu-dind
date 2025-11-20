@@ -114,5 +114,8 @@ RUN systemctl mask \
 # Volume /var/lib/docker to avoid storage driver issues
 VOLUME /var/lib/docker
 
+# Force overlay2 storage driver
+RUN mkdir -p /etc/docker && echo '{"storage-driver":"overlay2"}' > /etc/docker/daemon.json
+
 # Set systemd as entrypoint.
 ENTRYPOINT [ "/sbin/init", "--log-level=err" ]
