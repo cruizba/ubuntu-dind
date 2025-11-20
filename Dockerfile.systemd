@@ -111,5 +111,8 @@ STOPSIGNAL SIGRTMIN+3
 RUN systemctl mask \
     systemd-logind.service getty.service getty.target
 
+# Volume /var/lib/docker to avoid storage driver issues
+VOLUME /var/lib/docker
+
 # Set systemd as entrypoint.
 ENTRYPOINT [ "/sbin/init", "--log-level=err" ]
