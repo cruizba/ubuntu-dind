@@ -105,5 +105,11 @@ RUN set -eux; \
 # Make use of stopsignal (instead of sigterm) to stop systemd containers.
 STOPSIGNAL SIGRTMIN+3
 
+# Mask services of no use inside the container
+# to avoid problems with --privileged flag
+# Source: https://forums.docker.com/t/docker-run-privileged-systemd-kills-all-tty-sessions/8610/3
+RUN systemctl mask \
+    systemd-logind.service getty.service getty.target
+
 # Set systemd as entrypoint.
 ENTRYPOINT [ "/sbin/init", "--log-level=err" ]
