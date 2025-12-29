@@ -24,6 +24,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Install sysbox
+        run: |
+          cd /tmp
+          wget https://downloads.nestybox.com/sysbox/releases/v0.6.7/sysbox-ce_0.6.7-0.linux_amd64.deb
+          sudo dpkg -i sysbox-ce_0.6.7-0.linux_amd64.deb
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -35,12 +41,6 @@ jobs:
         with:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Install sysbox
-        run: |
-          cd /tmp
-          wget https://downloads.nestybox.com/sysbox/releases/v0.6.7/sysbox-ce_0.6.7-0.linux_amd64.deb
-          sudo dpkg -i sysbox-ce_0.6.7-0.linux_amd64.deb
 
       - name: Build standalone image
         uses: docker/build-push-action@v6
