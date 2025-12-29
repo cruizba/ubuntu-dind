@@ -36,6 +36,33 @@ jobs:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Install sysbox
+        run: |
+          cd /tmp
+          wget https://downloads.nestybox.com/sysbox/releases/v0.6.7/sysbox-ce_0.6.7-0.linux_amd64.deb
+          sudo dpkg -i sysbox-ce_0.6.7-0.linux_amd64.deb
+
+      - name: Build standalone image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          load: true
+          file: Dockerfile
+          platforms: linux/amd64
+          build-args: |
+            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+          tags: |
+            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
+
+      - name: Test standalone image (privileged mode)
+        run: |
+          chmod +x test.sh
+          ./test.sh --mode privileged --use-systemd false --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
+
+      - name: Test standalone image (sysbox-runc mode)
+        run: |
+          ./test.sh --mode sysbox-runc --use-systemd false --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
+
       - name: Build and push standalone image
         uses: docker/build-push-action@v6
         with:
@@ -49,6 +76,26 @@ jobs:
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
+
+      - name: Build systemd image
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          load: true
+          file: Dockerfile.systemd
+          platforms: linux/amd64
+          build-args: |
+            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+          tags: |
+            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
+
+      - name: Test systemd image (privileged mode)
+        run: |
+          ./test.sh --mode privileged --use-systemd true --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
+
+      - name: Test systemd image (sysbox-runc mode)
+        run: |
+          ./test.sh --mode sysbox-runc --use-systemd true --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
 
       - name: Build and push systemd image
         uses: docker/build-push-action@v6
