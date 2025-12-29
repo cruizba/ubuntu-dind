@@ -63,19 +63,19 @@ jobs:
         run: |
           ./test.sh --mode sysbox-runc --use-systemd false --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
 
-      - name: Build and push standalone image
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          file: Dockerfile
-          platforms: linux/amd64,linux/arm64
-          build-args: |
-            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
-          tags: |
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
-            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
+      # - name: Build and push standalone image
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     file: Dockerfile
+      #     platforms: linux/amd64,linux/arm64
+      #     build-args: |
+      #       UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+      #     tags: |
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
+      #       ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
 
       - name: Build systemd image
         uses: docker/build-push-action@v6
@@ -97,16 +97,16 @@ jobs:
         run: |
           ./test.sh --mode sysbox-runc --use-systemd true --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
 
-      - name: Build and push systemd image
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          file: Dockerfile.systemd
-          platforms: linux/amd64,linux/arm64
-          build-args: |
-            UBUNTU_VERSION=${{ matrix.ubuntu_version }}
-          tags: |
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
-            cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
-            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:systemd-latest' || '' }}
+      # - name: Build and push systemd image
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     file: Dockerfile.systemd
+      #     platforms: linux/amd64,linux/arm64
+      #     build-args: |
+      #       UBUNTU_VERSION=${{ matrix.ubuntu_version }}
+      #     tags: |
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+      #       cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
+      #       ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:systemd-latest' || '' }}
