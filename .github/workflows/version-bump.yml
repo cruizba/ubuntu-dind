@@ -90,6 +90,9 @@ jobs:
           Docker compose version: ${{ inputs.docker_compose_version }}
           Docker buildx: ${{ inputs.buildx_version }}
 
+          > [!WARNING]
+          > Temporary fixed containerd version to 1.7.28-1 to work around this sysbox issue: https://github.com/nestybox/sysbox/issues/973
+
           ## Dockerhub images
 
           > Updated images
