@@ -6,12 +6,12 @@ on:
       docker_version:
         description: 'Docker version (e.g., 28.4.1)'
         required: true
-        default: 29.1.2
+        default: 29.1.1
         type: string
       docker_compose_version:
         description: 'Docker Compose version (e.g., v2.40.0)'
         required: true
-        default: v5.0.1
+        default: v2.40.3
         type: string
       buildx_version:
         description: 'Docker Buildx version (e.g., v0.28.1)'
