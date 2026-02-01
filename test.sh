@@ -119,6 +119,195 @@ function test_nginx() {
     return 1
 }
 
+# Test docker build inside DinD container
+function test_docker_build() {
+    local container_name=$1
+
+    log_info "Testing docker build inside DinD container..."
+
+    # Create a test directory and Dockerfile
+    log_info "Creating test Dockerfile..."
+    docker exec "$container_name" mkdir -p /tmp/build-test
+    docker exec "$container_name" bash -c 'cat > /tmp/build-test/Dockerfile << EOF
+FROM alpine:latest
+RUN echo "Hello from DinD build test" > /hello.txt
+CMD ["cat", "/hello.txt"]
+EOF'
+
+    # Build the image
+    log_info "Building test image..."
+    if ! docker exec "$container_name" docker build -t dind-build-test:latest /tmp/build-test; then
+        log_error "Failed to build test image"
+        return 1
+    fi
+
+    # Verify the image was created
+    log_info "Verifying built image..."
+    if ! docker exec "$container_name" docker image inspect dind-build-test:latest >/dev/null 2>&1; then
+        log_error "Built image not found"
+        return 1
+    fi
+
+    # Run the built image and verify output
+    log_info "Running built image..."
+    local output=$(docker exec "$container_name" docker run --rm dind-build-test:latest)
+    if echo "$output" | grep -q "Hello from DinD build test"; then
+        log_info "Docker build test passed ✓"
+    else
+        log_error "Built image did not produce expected output"
+        return 1
+    fi
+
+    # Cleanup
+    log_info "Cleaning up build test artifacts..."
+    docker exec "$container_name" docker rmi dind-build-test:latest >/dev/null 2>&1 || true
+    docker exec "$container_name" rm -rf /tmp/build-test
+
+    return 0
+}
+
+# Test 'docker compose' (plugin syntax) inside DinD container
+function test_docker_compose_plugin() {
+    local container_name=$1
+
+    log_info "Testing 'docker compose' (plugin) inside DinD container..."
+
+    # Create a test directory and docker-compose.yml
+    log_info "Creating test docker-compose.yml..."
+    docker exec "$container_name" mkdir -p /tmp/compose-plugin-test
+    docker exec "$container_name" bash -c 'cat > /tmp/compose-plugin-test/docker-compose.yml << EOF
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8081:80"
+  redis:
+    image: redis:alpine
+EOF'
+
+    # Run docker compose up
+    log_info "Running 'docker compose up'..."
+    if ! docker exec -w /tmp/compose-plugin-test "$container_name" docker compose up -d; then
+        log_error "Failed to run 'docker compose up'"
+        return 1
+    fi
+
+    # Wait for services to be ready
+    log_info "Waiting for compose services to be ready..."
+    sleep 5
+
+    # Verify services are running
+    log_info "Verifying compose services..."
+    if ! docker exec -w /tmp/compose-plugin-test "$container_name" docker compose ps | grep -q "Up"; then
+        log_error "Compose services are not running"
+        docker exec -w /tmp/compose-plugin-test "$container_name" docker compose ps
+        docker exec -w /tmp/compose-plugin-test "$container_name" docker compose logs
+        return 1
+    fi
+
+    # Test connectivity to the web service
+    log_info "Testing HTTP connectivity to compose web service..."
+    local max_attempts=10
+    local attempt=0
+
+    while [ $attempt -lt $max_attempts ]; do
+        if docker exec "$container_name" curl -f http://localhost:8081 >/dev/null 2>&1; then
+            log_info "Successfully connected to compose web service ✓"
+            break
+        fi
+        attempt=$((attempt + 1))
+        sleep 2
+    done
+
+    if [ $attempt -eq $max_attempts ]; then
+        log_error "Failed to connect to compose web service"
+        docker exec -w /tmp/compose-plugin-test "$container_name" docker compose logs
+        return 1
+    fi
+
+    # Cleanup
+    log_info "Cleaning up compose plugin test..."
+    docker exec -w /tmp/compose-plugin-test "$container_name" docker compose down >/dev/null 2>&1 || true
+    docker exec "$container_name" rm -rf /tmp/compose-plugin-test
+
+    log_info "'docker compose' (plugin) test passed ✓"
+    return 0
+}
+
+# Test 'docker-compose' (standalone) inside DinD container
+function test_docker_compose_standalone() {
+    local container_name=$1
+
+    log_info "Testing 'docker-compose' (standalone) inside DinD container..."
+
+    # Check if docker-compose standalone is available
+    if ! docker exec "$container_name" which docker-compose >/dev/null 2>&1; then
+        log_error "docker-compose standalone binary not found"
+        return 1
+    fi
+
+    # Create a test directory and docker-compose.yml
+    log_info "Creating test docker-compose.yml..."
+    docker exec "$container_name" mkdir -p /tmp/compose-standalone-test
+    docker exec "$container_name" bash -c 'cat > /tmp/compose-standalone-test/docker-compose.yml << EOF
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - "8082:80"
+  redis:
+    image: redis:alpine
+EOF'
+
+    # Run docker-compose up
+    log_info "Running 'docker-compose up'..."
+    if ! docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose up -d; then
+        log_error "Failed to run 'docker-compose up'"
+        return 1
+    fi
+
+    # Wait for services to be ready
+    log_info "Waiting for compose services to be ready..."
+    sleep 5
+
+    # Verify services are running
+    log_info "Verifying compose services..."
+    if ! docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose ps | grep -q "Up"; then
+        log_error "Compose services are not running"
+        docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose ps
+        docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose logs
+        return 1
+    fi
+
+    # Test connectivity to the web service
+    log_info "Testing HTTP connectivity to compose web service..."
+    local max_attempts=10
+    local attempt=0
+
+    while [ $attempt -lt $max_attempts ]; do
+        if docker exec "$container_name" curl -f http://localhost:8082 >/dev/null 2>&1; then
+            log_info "Successfully connected to compose web service ✓"
+            break
+        fi
+        attempt=$((attempt + 1))
+        sleep 2
+    done
+
+    if [ $attempt -eq $max_attempts ]; then
+        log_error "Failed to connect to compose web service"
+        docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose logs
+        return 1
+    fi
+
+    # Cleanup
+    log_info "Cleaning up compose standalone test..."
+    docker exec -w /tmp/compose-standalone-test "$container_name" docker-compose down >/dev/null 2>&1 || true
+    docker exec "$container_name" rm -rf /tmp/compose-standalone-test
+
+    log_info "'docker-compose' (standalone) test passed ✓"
+    return 0
+}
+
 # Main test function
 function run_test() {
     local mode=$1
@@ -201,10 +390,31 @@ function run_test() {
         return 1
     fi
 
-    # Cleanup
+    # Cleanup nginx
     log_info "Stopping nginx container inside DinD..."
     docker exec "$container_name" docker stop test-nginx >/dev/null 2>&1 || true
     docker exec "$container_name" docker rm test-nginx >/dev/null 2>&1 || true
+
+    # Run docker build test
+    if ! test_docker_build "$container_name"; then
+        log_error "Docker build test failed"
+        cleanup "$container_name"
+        return 1
+    fi
+
+    # Run docker compose (plugin) test
+    if ! test_docker_compose_plugin "$container_name"; then
+        log_error "Docker compose (plugin) test failed"
+        cleanup "$container_name"
+        return 1
+    fi
+
+    # Run docker-compose (standalone) test
+    if ! test_docker_compose_standalone "$container_name"; then
+        log_error "Docker-compose (standalone) test failed"
+        cleanup "$container_name"
+        return 1
+    fi
 
     cleanup "$container_name"
 
