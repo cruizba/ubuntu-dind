@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build standalone image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: false
           load: true
@@ -64,7 +64,7 @@ jobs:
           ./test.sh --mode sysbox-runc --use-systemd false --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
 
       - name: Build and push standalone image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: true
           file: Dockerfile
@@ -78,7 +78,7 @@ jobs:
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
 
       - name: Build systemd image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: false
           load: true
@@ -98,7 +98,7 @@ jobs:
           ./test.sh --mode sysbox-runc --use-systemd true --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
 
       - name: Build and push systemd image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: true
           file: Dockerfile.systemd
