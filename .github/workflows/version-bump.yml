@@ -6,17 +6,17 @@ on:
       docker_version:
         description: 'Docker version (e.g., 28.4.1)'
         required: true
-        default: 29.2.1
+        default: 29.3.0
         type: string
       docker_compose_version:
         description: 'Docker Compose version (e.g., v2.40.0)'
         required: true
-        default: v5.0.2
+        default: v5.1.0
         type: string
       buildx_version:
         description: 'Docker Buildx version (e.g., v0.28.1)'
         required: true
-        default: v0.31.1
+        default: v0.32.1
         type: string
       build_number:
         description: 'Build number (usually 0 for first release)'
