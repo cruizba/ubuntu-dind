@@ -22,7 +22,7 @@ jobs:
             ubuntu_name: "noble"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install sysbox
         run: |
@@ -31,19 +31,19 @@ jobs:
           sudo dpkg -i sysbox-ce_0.7.0-0.linux_amd64.deb
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
 
       - name: Login to DockerHub
-        uses: docker/login-action@v4
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build standalone image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           push: false
           load: true
@@ -64,7 +64,7 @@ jobs:
           ./test.sh --mode sysbox-runc --use-systemd false --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-test
 
       - name: Build and push standalone image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           push: true
           file: Dockerfile
@@ -78,7 +78,7 @@ jobs:
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
 
       - name: Build systemd image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           push: false
           load: true
@@ -98,7 +98,7 @@ jobs:
           ./test.sh --mode sysbox-runc --use-systemd true --image-name cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-test
 
       - name: Build and push systemd image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           push: true
           file: Dockerfile.systemd
