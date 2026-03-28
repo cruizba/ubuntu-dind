@@ -174,8 +174,28 @@ You have this example in the `examples` folder.
 
 ## 5. Available images
 
-You can find the available images in the [Docker Hub](https://hub.docker.com/r/cruizba/ubuntu-dind).
+Images are published to three registries:
+
+| Registry | URL |
+|----------|-----|
+| Docker Hub | https://hub.docker.com/r/cruizba/ubuntu-dind |
+| GitHub Container Registry | https://github.com/cruizba/ubuntu-dind/pkgs/container/ubuntu-dind |
+| Quay.io | https://quay.io/repository/cruizba/ubuntu-dind |
+
 Check also the Releases section to see the available tags: [Releases](https://github.com/cruizba/ubuntu-dind/releases)
+
+All registries publish the same tags. You can pull from any of them by prefixing the image name:
+
+```bash
+# Docker Hub (default)
+docker pull cruizba/ubuntu-dind:latest
+
+# GitHub Container Registry
+docker pull ghcr.io/cruizba/ubuntu-dind:latest
+
+# Quay.io
+docker pull quay.io/cruizba/ubuntu-dind:latest
+```
 
 All tags are released in this format:
 

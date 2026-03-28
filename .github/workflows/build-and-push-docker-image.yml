@@ -13,6 +13,9 @@ env:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         include:
@@ -41,6 +44,20 @@ jobs:
         with:
           username: cruizba
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Quay.io
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Build standalone image
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
@@ -76,6 +93,14 @@ jobs:
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:latest' || '' }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
+            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'ghcr.io/cruizba/ubuntu-dind:latest' || '' }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-latest
+            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'quay.io/cruizba/ubuntu-dind:latest' || '' }}
 
       - name: Build systemd image
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
@@ -110,3 +135,11 @@ jobs:
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
             cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
             ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'cruizba/ubuntu-dind:systemd-latest' || '' }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            ghcr.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
+            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'ghcr.io/cruizba/ubuntu-dind:systemd-latest' || '' }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-${{ env.CURRENT_VERSION }}-r${{ env.BUILD_NUMBER }}
+            quay.io/cruizba/ubuntu-dind:${{ matrix.ubuntu_name }}-systemd-latest
+            ${{ matrix.ubuntu_version == env.LATEST_UBUNTU_VERSION && 'quay.io/cruizba/ubuntu-dind:systemd-latest' || '' }}
