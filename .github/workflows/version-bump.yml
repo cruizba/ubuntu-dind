@@ -90,7 +90,18 @@ jobs:
           Docker compose version: ${{ inputs.docker_compose_version }}
           Docker buildx: ${{ inputs.buildx_version }}
 
-          ## Dockerhub images
+          ## Available registries
+
+          Images are published to Docker Hub, GitHub Container Registry and Quay.io.
+          All registries publish the same tags — pull from whichever you prefer:
+
+          | Registry | Image |
+          |----------|-------|
+          | Docker Hub | `cruizba/ubuntu-dind` |
+          | GitHub Container Registry | `ghcr.io/cruizba/ubuntu-dind` |
+          | Quay.io | `quay.io/cruizba/ubuntu-dind` |
+
+          ## Updated images
 
           > Updated images
           ```bash
@@ -134,6 +145,8 @@ jobs:
           ```
           cruizba/ubuntu-dind:systemd-latest
           ```
+
+          > Prefix any tag with `ghcr.io/` or `quay.io/` to pull from those registries instead.
           EOF
 
       - name: Create Release
