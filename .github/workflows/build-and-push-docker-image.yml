@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  CURRENT_VERSION: 29.5.1
+  CURRENT_VERSION: 29.5.2
   BUILD_NUMBER: 0
   LATEST_UBUNTU_VERSION: "26.04"
 
