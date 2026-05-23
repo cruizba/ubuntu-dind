@@ -108,10 +108,12 @@ jobs:
           # Normal images
           cruizba/ubuntu-dind:jammy-${{ inputs.docker_version }}
           cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}
+          cruizba/ubuntu-dind:resolute-${{ inputs.docker_version }}
 
           # SystemD images
           cruizba/ubuntu-dind:jammy-systemd-${{ inputs.docker_version }}
           cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}
+          cruizba/ubuntu-dind:resolute-systemd-${{ inputs.docker_version }}
           ```
 
           > Fixed images
@@ -119,10 +121,12 @@ jobs:
           # Normal images
           cruizba/ubuntu-dind:jammy-${{ inputs.docker_version }}-r${{ inputs.build_number }}
           cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+          cruizba/ubuntu-dind:resolute-${{ inputs.docker_version }}-r${{ inputs.build_number }}
 
           # SystemD images
           cruizba/ubuntu-dind:jammy-systemd-${{ inputs.docker_version }}-r${{ inputs.build_number }}
           cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}-r${{ inputs.build_number }}
+          cruizba/ubuntu-dind:resolute-systemd-${{ inputs.docker_version }}-r${{ inputs.build_number }}
           ```
 
           > Latest Images per Ubuntu version:
@@ -130,18 +134,20 @@ jobs:
           # Normal images
           cruizba/ubuntu-dind:jammy-latest
           cruizba/ubuntu-dind:noble-latest
+          cruizba/ubuntu-dind:resolute-latest
 
           # Systemd images
           cruizba/ubuntu-dind:jammy-systemd-latest
           cruizba/ubuntu-dind:noble-systemd-latest
+          cruizba/ubuntu-dind:resolute-systemd-latest
           ```
 
-          > Latest normal Image: `cruizba/ubuntu-dind:noble-${{ inputs.docker_version }}`
+          > Latest normal Image: `cruizba/ubuntu-dind:resolute-${{ inputs.docker_version }}`
           ```
           cruizba/ubuntu-dind:latest
           ```
 
-          > Latest Systemd Image: `cruizba/ubuntu-dind:noble-systemd-${{ inputs.docker_version }}`
+          > Latest Systemd Image: `cruizba/ubuntu-dind:resolute-systemd-${{ inputs.docker_version }}`
           ```
           cruizba/ubuntu-dind:systemd-latest
           ```

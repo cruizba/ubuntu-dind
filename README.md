@@ -18,7 +18,7 @@ or with [sysbox](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/
 ```
 docker run -it --runtime=sysbox-runc cruizba/ubuntu-dind
 ```
-2. Compatible with current LTS versions of Ubuntu (`jammy` and `noble`)
+2. Compatible with current LTS versions of Ubuntu (`jammy`, `noble` and `resolute`)
 3. Support for arm64 and amd64 architectures.
 4. Easy to extend, customize and use.
 5. Always updated with current buildx, compose and docker versions.
@@ -211,11 +211,13 @@ All tags are released in this format:
 cruizba/ubuntu-dind:focal-<docker-version>
 cruizba/ubuntu-dind:jammy-<docker-version>
 cruizba/ubuntu-dind:noble-<docker-version>
+cruizba/ubuntu-dind:resolute-<docker-version>
 
 # Systemd images
 cruizba/ubuntu-dind:focal-systemd-<docker-version>
 cruizba/ubuntu-dind:jammy-systemd-<docker-version>
 cruizba/ubuntu-dind:noble-systemd-<docker-version>
+cruizba/ubuntu-dind:resolute-systemd-<docker-version>
 ```
 
 ### Fixed images and revision
@@ -225,11 +227,13 @@ cruizba/ubuntu-dind:noble-systemd-<docker-version>
 cruizba/ubuntu-dind:focal-<docker-version>-r<revision>
 cruizba/ubuntu-dind:jammy-<docker-version>-r<revision>
 cruizba/ubuntu-dind:noble-<docker-version>-r<revision>
+cruizba/ubuntu-dind:resolute-<docker-version>-r<revision>
 
 # Systemd images
 cruizba/ubuntu-dind:focal-systemd-<docker-version>-r<revision>
 cruizba/ubuntu-dind:jammy-systemd-<docker-version>-r<revision>
 cruizba/ubuntu-dind:noble-systemd-<docker-version>-r<revision>
+cruizba/ubuntu-dind:resolute-systemd-<docker-version>-r<revision>
 ```
 
 ### Latest Images per Ubuntu version:
@@ -239,11 +243,13 @@ cruizba/ubuntu-dind:noble-systemd-<docker-version>-r<revision>
 cruizba/ubuntu-dind:focal-latest
 cruizba/ubuntu-dind:jammy-latest
 cruizba/ubuntu-dind:noble-latest
+cruizba/ubuntu-dind:resolute-latest
 
 # Systemd images
 cruizba/ubuntu-dind:focal-systemd-latest
 cruizba/ubuntu-dind:jammy-systemd-latest
 cruizba/ubuntu-dind:noble-systemd-latest
+cruizba/ubuntu-dind:resolute-systemd-latest
 ```
 
 ### Latest Images:

@@ -8,7 +8,7 @@ on:
 env:
   CURRENT_VERSION: 29.4.3
   BUILD_NUMBER: 0
-  LATEST_UBUNTU_VERSION: "24.04"
+  LATEST_UBUNTU_VERSION: "26.04"
 
 jobs:
   docker:
@@ -23,6 +23,8 @@ jobs:
             ubuntu_name: "jammy"
           - ubuntu_version: "24.04"
             ubuntu_name: "noble"
+          - ubuntu_version: "26.04"
+            ubuntu_name: "resolute"
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

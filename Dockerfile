@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION="24.04"
+ARG UBUNTU_VERSION="26.04"
 FROM ubuntu:${UBUNTU_VERSION}
 
 ARG UBUNTU_VERSION
@@ -14,11 +14,16 @@ RUN set -eux; \
     ca-certificates wget curl iptables supervisor \
     && rm -rf /var/lib/apt/lists/*
 
-# Set iptables-legacy for Ubuntu 22.04 and newer
+# Set iptables backend per Ubuntu version:
+#  - 22.04, 24.04: legacy backend (kept for compatibility)
+#  - 26.04+: nft backend (iptables-legacy can't initialise the nat table on
+#    iptables 1.8.11 shipped in 26.04)
 RUN set -eux; \
-    if [ "${UBUNTU_VERSION}" != "20.04" ]; then \
-    update-alternatives --set iptables /usr/sbin/iptables-legacy; \
-    fi
+    case "${UBUNTU_VERSION}" in \
+        20.04) ;; \
+        22.04|24.04) update-alternatives --set iptables /usr/sbin/iptables-legacy ;; \
+        *) update-alternatives --set iptables /usr/sbin/iptables-nft ;; \
+    esac
 
 # Install Docker
 RUN apt-get update && apt-get install -y wget curl \
