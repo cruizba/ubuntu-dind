@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-DOCKER_VERSION="29.5.2"
-BUILD_NUMBER="1"
+DOCKER_VERSION="29.5.3"
+BUILD_NUMBER="0"
 LATEST_UBUNTU_VERSION="26.04"
 
 declare -A ubuntu_versions=(
