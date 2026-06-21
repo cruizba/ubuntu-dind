@@ -35,14 +35,15 @@ jobs:
           sudo dpkg -i sysbox-ce_0.7.0-0.linux_amd64.deb || sudo apt-get install -f -y
           # The .deb postinstall cannot always start the service via systemctl
           # during dpkg (deb-systemd-invoke), so start it explicitly and wait
-          # for the sysbox-fs socket before running sysbox-runc tests.
+          # for the sysbox-fs socket before running sysbox-runc tests. The socket
+          # lives in a root-only directory, so the checks must run with sudo.
           sudo systemctl restart sysbox
           for i in $(seq 1 30); do
-            [ -S /run/sysbox/sysfs.sock ] && break
+            sudo test -S /run/sysbox/sysfs.sock && break
             sleep 1
           done
           sudo systemctl status sysbox-fs sysbox-mgr --no-pager || true
-          test -S /run/sysbox/sysfs.sock
+          sudo test -S /run/sysbox/sysfs.sock
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
