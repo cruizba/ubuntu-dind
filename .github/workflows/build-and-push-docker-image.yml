@@ -38,7 +38,17 @@ jobs:
         run: |
           cd /tmp
           wget https://downloads.nestybox.com/sysbox/releases/v0.7.0/sysbox-ce_0.7.0-0.linux_amd64.deb
-          sudo dpkg -i sysbox-ce_0.7.0-0.linux_amd64.deb
+          sudo dpkg -i sysbox-ce_0.7.0-0.linux_amd64.deb || sudo apt-get install -f -y
+          # The .deb postinstall cannot always start the service via systemctl
+          # during dpkg (deb-systemd-invoke), so start it explicitly and wait
+          # for the sysbox-fs socket before running sysbox-runc tests.
+          sudo systemctl restart sysbox
+          for i in $(seq 1 30); do
+            [ -S /run/sysbox/sysfs.sock ] && break
+            sleep 1
+          done
+          sudo systemctl status sysbox-fs sysbox-mgr --no-pager || true
+          test -S /run/sysbox/sysfs.sock
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@06116385d9baf250c9f4dcb4858b16962ea869c3 # v4.1.0
