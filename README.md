@@ -91,6 +91,10 @@ docker exec -it ubuntu-dind bash
 
 For this option you need to have Sysbox installed in your system. You can see how to install it [here](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install-package.md) (Package installation works only in debian-based distros sadly).
 
+> [!WARNING]
+> Sysbox only supports a specific set of Linux distributions and kernels. Check the [Sysbox distro compatibility list](https://github.com/nestybox/sysbox/blob/master/docs/distro-compat.md) before using `--runtime=sysbox-runc`.
+> In particular, **kernel 7.x currently appears to be unstable with Sysbox** (observed in our CI — this is not an official Sysbox statement), so hosts running it (such as Ubuntu 26.04 `resolute`) may fail to start `sysbox-runc` containers. Until kernel 7.x is officially supported by Sysbox, run it on a host with a supported kernel.
+
 To use this Docker-in-Docker image in a more secure environment, run the following command:
 
 ```bash

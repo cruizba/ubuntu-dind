@@ -12,7 +12,12 @@ env:
 
 jobs:
   docker:
-    runs-on: ubuntu-latest
+    # TEMPORARY pin to 24.04: Sysbox only supports a specific set of distros/kernels
+    # (https://github.com/nestybox/sysbox/blob/master/docs/distro-compat.md). The
+    # kernel 7.0 on newer runner images (ubuntu-latest / ubuntu-26.04) appears to be
+    # unstable with Sysbox (observed in CI, not an official Sysbox statement).
+    # Revert to ubuntu-latest only once kernel 7.x is officially supported by Sysbox.
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
