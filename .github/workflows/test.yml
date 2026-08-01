@@ -8,15 +8,22 @@ on:
 
 jobs:
   test:
+    name: test (${{ matrix.ubuntu_version }}, ${{ matrix.ubuntu_name }}, ${{ matrix.arch }})
+    # Each architecture builds and tests natively (amd64 on ubuntu-24.04,
+    # arm64 on ubuntu-24.04-arm) — DinD cannot run under QEMU emulation
+    # (netfilter/runc kernel interfaces are not translated by qemu-user).
+    #
     # TEMPORARY pin to 24.04: Sysbox only supports a specific set of distros/kernels
     # (https://github.com/nestybox/sysbox/blob/master/docs/distro-compat.md). The
     # kernel 7.0 on newer runner images (ubuntu-latest / ubuntu-26.04) appears to be
     # unstable with Sysbox (observed in CI, not an official Sysbox statement).
     # Revert to ubuntu-latest only once kernel 7.x is officially supported by Sysbox.
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
+        ubuntu_version: ["22.04", "24.04", "26.04"]
+        arch: [amd64, arm64]
         include:
           - ubuntu_version: "22.04"
             ubuntu_name: "jammy"
@@ -24,6 +31,10 @@ jobs:
             ubuntu_name: "noble"
           - ubuntu_version: "26.04"
             ubuntu_name: "resolute"
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -33,8 +44,8 @@ jobs:
           cd /tmp
           # v0.7.1 is only published as GitHub release assets, not on
           # downloads.nestybox.com (which stops at v0.7.0).
-          wget https://github.com/nestybox/sysbox/releases/download/v0.7.1/sysbox-ce_0.7.1.linux_amd64.deb
-          sudo dpkg -i sysbox-ce_0.7.1.linux_amd64.deb || sudo apt-get install -f -y
+          wget https://github.com/nestybox/sysbox/releases/download/v0.7.1/sysbox-ce_0.7.1.linux_${{ matrix.arch }}.deb
+          sudo dpkg -i sysbox-ce_0.7.1.linux_${{ matrix.arch }}.deb || sudo apt-get install -f -y
           # The .deb postinstall cannot always start the service via systemctl
           # during dpkg (deb-systemd-invoke), so start it explicitly and wait
           # for the sysbox-fs socket before running sysbox-runc tests. The socket
@@ -59,7 +70,7 @@ jobs:
           push: false
           load: true
           file: Dockerfile
-          platforms: linux/amd64
+          platforms: linux/${{ matrix.arch }}
           build-args: |
             UBUNTU_VERSION=${{ matrix.ubuntu_version }}
           tags: |
@@ -80,7 +91,7 @@ jobs:
           push: false
           load: true
           file: Dockerfile.systemd
-          platforms: linux/amd64
+          platforms: linux/${{ matrix.arch }}
           build-args: |
             UBUNTU_VERSION=${{ matrix.ubuntu_version }}
           tags: |
