@@ -60,7 +60,10 @@ jobs:
           # during dpkg (deb-systemd-invoke), so start it explicitly and wait
           # for the sysbox-fs socket before running sysbox-runc tests. The socket
           # lives in a root-only directory, so the checks must run with sudo.
-          sudo systemctl restart sysbox
+          sudo systemctl restart sysbox || {
+            sudo journalctl -u sysbox -u sysbox-fs -u sysbox-mgr --no-pager | tail -50
+            exit 1
+          }
           for i in $(seq 1 30); do
             sudo test -S /run/sysbox/sysfs.sock && break
             sleep 1

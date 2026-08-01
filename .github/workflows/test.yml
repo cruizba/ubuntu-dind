@@ -31,13 +31,18 @@ jobs:
       - name: Install sysbox
         run: |
           cd /tmp
-          wget https://downloads.nestybox.com/sysbox/releases/v0.7.0/sysbox-ce_0.7.0-0.linux_amd64.deb
-          sudo dpkg -i sysbox-ce_0.7.0-0.linux_amd64.deb || sudo apt-get install -f -y
+          # v0.7.1 is only published as GitHub release assets, not on
+          # downloads.nestybox.com (which stops at v0.7.0).
+          wget https://github.com/nestybox/sysbox/releases/download/v0.7.1/sysbox-ce_0.7.1.linux_amd64.deb
+          sudo dpkg -i sysbox-ce_0.7.1.linux_amd64.deb || sudo apt-get install -f -y
           # The .deb postinstall cannot always start the service via systemctl
           # during dpkg (deb-systemd-invoke), so start it explicitly and wait
           # for the sysbox-fs socket before running sysbox-runc tests. The socket
           # lives in a root-only directory, so the checks must run with sudo.
-          sudo systemctl restart sysbox
+          sudo systemctl restart sysbox || {
+            sudo journalctl -u sysbox -u sysbox-fs -u sysbox-mgr --no-pager | tail -50
+            exit 1
+          }
           for i in $(seq 1 30); do
             sudo test -S /run/sysbox/sysfs.sock && break
             sleep 1
