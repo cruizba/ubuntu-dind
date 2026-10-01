@@ -3,9 +3,9 @@ FROM ubuntu:${UBUNTU_VERSION}
 
 ARG UBUNTU_VERSION
 ENV DOCKER_CHANNEL=stable \
-    DOCKER_VERSION=29.8.1 \
+    DOCKER_VERSION=29.8.2 \
     DOCKER_COMPOSE_VERSION=v5.5.1 \
-    BUILDX_VERSION=v0.37.1 \
+    BUILDX_VERSION=v0.37.2 \
     DEBUG=false
 
 # Install common dependencies
